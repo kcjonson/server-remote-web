@@ -19,21 +19,18 @@ define([
 	var QUICK_ACTIONS = [
 		{
 			name: 'Turn Off Everything',
-			label: 'Everything Off',
 			condition: function(conditions) {
 				return conditions.numLightsOn > 0;
 			}
 		},
 		{
 			name: 'Turn On All Lights',
-			label: 'All Lights On',
 			condition: function(conditions) {
 				return conditions.numLightsOn !== conditions.numLights;
 			}
 		},
 		{
 			name: 'Set Movie Mood',
-			label: 'Movie Mood',
 			condition: function(conditions) {
 				// TODO: Motion Detected in tv room recently
 				return true;
@@ -41,22 +38,31 @@ define([
 		},
 		{
 			name: 'Set Bedtime Mood',
-			label: 'Bedtime Mood',
 			condition: function(conditions) {
 				// Todo: Motion detected in bedroom recently (need to install hardware)
 				return new Date().getHours() > 17;
 			}
 		},
 		{
+			name: 'Play KEXP',
+			condition: function(conditions) {
+				return conditions.iTunesIsPlaying == false;
+			}
+		},
+		{
+			name: 'Pause Music',
+			condition: function(conditions) {
+				return conditions.iTunesIsPlaying == true;
+			}
+		},
+		{
 			name: 'Turn On Outside Lights',
-			label: 'Outside Lights On',
 			condition: function(conditions) {
 				return conditions.isDaylight == false && conditions.numOutsideLightsOn < conditions.numOutsideLights;
 			}
 		},
 		{
 			name: 'Turn Off Outside Lights',
-			label: 'Outside Lights Off',
 			condition: function(conditions) {
 				return conditions.numOutsideLightsOn > 0;
 			}
@@ -239,12 +245,14 @@ define([
 				this._thermostatsStatusNode.innerHTML = 'Off'
 			}
 
+			var iTunesDevice = devicesCollection.findWhere({name: 'iTunes'});
 			this._createActions({
 				numLights: numLights,
 				numLightsOn: numLightsOn,
 				numOutsideLights: numOutsideLights,
 				numOutsideLightsOn: numOutsideLightsOn,
-				isDaylight: variables.findWhere({name: 'isDaylight'}).get('value')
+				isDaylight: variables.findWhere({name: 'isDaylight'}).get('value'),
+				iTunesIsPlaying: iTunesDevice && iTunesDevice.get('displayRawState') == 'playing'
 			});
 		},
 
@@ -262,7 +270,7 @@ define([
 			var actionsCollection = this.indigoModel.get('actions');
 			QUICK_ACTIONS.forEach(function(action, index){
 				isVisible = action.condition(conditions)
-				if (isVisible && !action.view && index < 4) {
+				if (isVisible && !action.view && index < 10) {
 					var actionModel = actionsCollection.findWhere({name: action.name})
 					//console.log(actionsCollection, action.name, actionModel);
 					if (actionModel) {

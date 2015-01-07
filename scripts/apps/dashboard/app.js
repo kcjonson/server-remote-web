@@ -65,7 +65,13 @@ require([
 		});
 		indigoModel.on("change", _.bind(_onIndigoModelChange, this));
 		indigoModel.on("error", _.bind(_onIndigoModelError, this));
-		indigoModel.fetch();
+		indigoModel.fetch({
+			success: function() {
+				setInterval(function() {
+					indigoModel.fetch();
+				}, 10000);
+			}
+		});
 	}
 
 	function initRouter(argument) {

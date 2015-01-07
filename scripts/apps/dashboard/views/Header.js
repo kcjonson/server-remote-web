@@ -26,8 +26,8 @@ define([
 			    this._titleNode.innerHTML = route; 
 			}, this));
 
-			this.indigoModel.on("request", _.bind(this._onIndigoModelRequest, this));
-			this.indigoModel.on("sync", _.bind(this._onIndigoModelSync, this));
+			//this.indigoModel.on("request", _.bind(this._onIndigoModelRequest, this));
+			//this.indigoModel.on("sync", _.bind(this._onIndigoModelSync, this));
 
 		},
 		
