@@ -18,6 +18,7 @@ define([
 	return View.extend({
 
 		name: 'Action',
+		className: 'clickable',
 		templateString: templateString,
 
 		initialize: function(params) {

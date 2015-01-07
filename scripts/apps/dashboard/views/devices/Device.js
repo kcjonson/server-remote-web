@@ -18,6 +18,7 @@ define([
 	return Backbone.View.extend({
 
 		name: 'Device',
+		className: 'clickable',
 
 		initialize: function(params) {
 			this.router = params.router;
@@ -121,6 +122,9 @@ define([
 					var isOn = this.model.get('hvacHeaterIsOn');
 					$(this._stateNode).addClass('icon fa fa-fire');
 					$(this._stateNode).toggleClass('on', isOn);
+					break;
+				case 'switch': 
+					$(this._stateNode).addClass('smaller icon fa fa-adjust');
 					break;
 			}
 		}
