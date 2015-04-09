@@ -15,7 +15,7 @@ define([
 	return Backbone.RelationalModel.extend({
 
 		url: function() {
-			return SERVER + 'api/checkins'
+			return SERVER + '/api/checkins'
 		},
 
 		relations: [

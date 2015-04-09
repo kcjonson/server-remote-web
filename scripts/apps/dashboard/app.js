@@ -1,5 +1,5 @@
 
-SERVER = 'http://1825eglen.com/'
+SERVER = '/'
 
 require.config({
 	baseUrl: 'scripts',
@@ -24,12 +24,14 @@ require([
 	'app/Router',
 	'app/models/Indigo',
 	'app/views/Navigation',
-	'app/views/Header'
+	'app/views/Header',
+	'app/util/CurrentUser'
 ], function(
 	Router,
 	IndigoModel,
 	Navigation,
-	Header
+	Header,
+	CurrentUser
 ){
 
 
@@ -37,84 +39,77 @@ require([
 	document.addEventListener("touchstart", function() {},false);
 
 
-
 	var indigoModel;
 	var router;
 	var navigation;
 	var header;
-	var started = false;
-
-
-	initModel();
-	initRouter();
 
 
 
 
-// Init Methods
 
-	function initModel() {
-		indigoModel = new IndigoModel({
-			id: '1',
-			variables: [
-				{name: 'AlarmOn'},
-				{name: 'AlarmRunning'},
-				{name: 'AlarmHour'},
-				{name: 'AlarmMinute'}
-			]
-		});
-		indigoModel.on("change", _.bind(_onIndigoModelChange, this));
-		indigoModel.on("error", _.bind(_onIndigoModelError, this));
-		indigoModel.fetch({
-			success: function() {
-				setInterval(function() {
-					indigoModel.fetch();
-				}, 10000);
-			}
-		});
-	}
+// Startup
 
-	function initRouter(argument) {
-		router = new Router({
-			indigoModel: indigoModel,
-			el: $('body > .views')
-		});
-		navigation = new Navigation({
-			el: $('body > .footer > .navigation'),
-			router: router
-		});
-		header = new Header({
-			el: $('body > .header'),
-			router: router,
-			indigoModel: indigoModel
-		});
-	};
+	Backbone.history.start({
+		root: '/server-remote-web/',
+		pushState: true
+	});
 
 
-	function start() {
-		Backbone.history.start({
-			root: '/home/',
-			pushState: true
-		});
-		router.navigate('', { trigger: true });
-		$('body').addClass('loaded');
-		started = true;
-	};
+	// Set Up Indigo Model
+	indigoModel = new IndigoModel({id: '1'});
+	indigoModel.on("error", _.bind(_onIndigoModelError, this));
+
+
+	// Set Up Router & Start History
+	router = new Router({
+		indigoModel: indigoModel,
+		el: $('body > .views')
+	});
+
+
+	// Create Common UI
+	navigation = new Navigation({
+		el: $('body > .footer > .navigation'),
+		router: router
+	});
+	header = new Header({
+		el: $('body > .header'),
+		router: router,
+		indigoModel: indigoModel
+	});
+
+
+	CurrentUser.authenticate(function(error){
+		if (error && error.status == 401) {
+			$('body').addClass('loaded');
+			router.navigate('login', {trigger: true});
+		} else if (error) {
+			console.error('There was an error with the authentication server')
+		} else {
+			indigoModel.once("change", function(){
+				$('body').addClass('loaded');
+				router.navigate('dashboard', {trigger: true});
+			});
+			indigoModel.fetch({});
+		}
+	});
 
 
 
 // Event Handlers
 
-	function _onIndigoModelChange() {
-		console.log('app._onIndigoModelChange()', indigoModel);
-		if (!started) {
-			start();
+	// This should be factored out to be on ALL models.
+	function _onIndigoModelError(model, response) {
+		switch (response.status) {
+			case 401:
+				router.navigate('login', {trigger: true});
+				break;
+			default:
+				console.error('app._onIndigoModelError(): Un unrecognized error has occured');
 		}
 	}
 
-	function _onIndigoModelError(error) {
-		console.log('app._onIndigoModelError()', error);
-	}
 
 
 

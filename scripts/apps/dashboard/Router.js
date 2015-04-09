@@ -6,7 +6,9 @@ define([
 	'app/views/Devices',
 	'app/views/Actions',
 	'app/views/Alarm',
-	'app/views/Device'
+	'app/views/Device',
+	'app/views/Admin',
+	'app/views/Login'
 ], function(
 	$,
 	_,
@@ -15,7 +17,9 @@ define([
 	Devices,
 	Actions,
 	Alarm,
-	Device
+	Device,
+	Admin,
+	Login
 ){
 
 	// Store the loaded views in an object,
@@ -26,16 +30,19 @@ define([
 	return Backbone.Router.extend({
 
 		routes: {
-			'': 'Dashboard',
+			'dashboard': 'Dashboard',
 			'devices': 'Devices',
 			'actions': 'Actions',
 			'alarm': 'Alarm',
+			'admin': 'Admin',
+			'login': 'Login',
 			'device/:device': 'Device'
 		},
 		
 		initialize: function(args) {
 			this.el = args.el;
 			this.on('route', function(currentView, params) {
+				console.log('Routing to ', currentView);
 
 				// Create View if not Visited Yet.
 				// Alternately, we could do this all at init.
@@ -57,6 +64,17 @@ define([
 						if (v.name !== currentView) {
 							v.hide();
 						} else {
+							this.el.scrollTop(0);
+							if (v.hideHeader === true) {
+								this.trigger('hide:header');
+							} else {
+								this.trigger('show:header');
+							}
+							if (v.hideNavigation === true) {
+								this.trigger('hide:navigation');
+							} else {
+								this.trigger('show:navigation');
+							}
 							v.show(params);
 						}
 					}
@@ -69,15 +87,15 @@ define([
 		},
 
 		Dashboard: function() {
-			console.log('route to Dashboard');
+			//console.log('route to Dashboard');
 		},
 
 		Devices: function() {
-			console.log('route to Devices');
+			//console.log('route to Devices');
 		},
 
 		Actions: function() {
-			console.log('route to Actions');
+			//console.log('route to Actions');
 		}
 		
 		

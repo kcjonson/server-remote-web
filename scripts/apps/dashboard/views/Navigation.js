@@ -16,6 +16,7 @@ define([
 
 	// Init
 		name: 'Navigation',
+		shown: true,
 
 		initialize: function(args) {
 			this._options = {}; // Store node refs for nav options.
@@ -33,6 +34,25 @@ define([
 			    }
 			}, this));
 
+			this.router.on('show:navigation', this.show.bind(this));
+			this.router.on('hide:navigation', this.hide.bind(this));
+
+		},
+
+		show: function() {
+			if (!this.shown) {
+				this.$el.removeClass('hidden')
+				this.shown = true;
+			}
+			
+		},
+
+		hide: function() {
+			if (this.shown) {
+				this.$el.addClass('hidden');
+				this.shown = false;
+			}
+			
 		},
 		
 		_initializeTemplate: function() {

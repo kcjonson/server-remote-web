@@ -14,15 +14,9 @@ define([
 	
 	return Backbone.RelationalModel.extend({
 
-		url: function() {
-			return SERVER + '/api/dashboard'
-		},
+		idAttribute: '_id',
+		urlRoot: '/api/users/user'
 
-		relations: [
-
-		]
-
-	
 	});
 
 });

@@ -178,15 +178,13 @@ define([
 	// Private
 
 		_updateDisplay: function() {
-			console.log('Update Display', this.indigoModel);
-
-			var variables = this.indigoModel.get('variables');
+			//console.log('Update Display', this.indigoModel);
 
 			// Alarm
-			var hour = variables.findWhere({name: 'AlarmHour'}).get('value');
-			var minute = variables.findWhere({name: 'AlarmMinute'}).get('value');
-			var isOn = variables.findWhere({name: 'AlarmOn'}).get('value');
-			var isRunning = variables.findWhere({name: 'AlarmRunning'}).get('value');
+			var hour = this._getVariable('AlarmHour');
+			var minute = this._getVariable('AlarmMinute');
+			var isOn = this._getVariable('AlarmOn');
+			var isRunning = this._getVariable('AlarmRunning');
 			if (hour && minute) {
 				if (minute.toString().length < 2) {
 					minute = "0" + minute;
@@ -198,8 +196,8 @@ define([
 			$(this._alarmIsRunningNode).toggleClass('hidden', !isRunning);
 
 			// Away Status
-			var isAwayKevin = variables.findWhere({name: 'isAwayKevin'}).get('value');
-			var isAwayMargaret = variables.findWhere({name: 'isAwayMargaret'}).get('value');
+			var isAwayKevin = this._getVariable('isAwayKevin');
+			var isAwayMargaret = this._getVariable('isAwayMargaret');
 			$(this._isAwayKevinNode).toggleClass('true', !isAwayKevin);
 			$(this._isAwayMargaretNode).toggleClass('true', !isAwayMargaret);
 
@@ -251,9 +249,21 @@ define([
 				numLightsOn: numLightsOn,
 				numOutsideLights: numOutsideLights,
 				numOutsideLightsOn: numOutsideLightsOn,
-				isDaylight: variables.findWhere({name: 'isDaylight'}).get('value'),
+				isDaylight: this._getVariable('isDaylight'),
 				iTunesIsPlaying: iTunesDevice && iTunesDevice.get('displayRawState') == 'playing'
 			});
+		},
+
+		_getVariable: function(variableName) {
+			if (this.indigoModel) {
+				var variables = this.indigoModel.get('variables');
+				if (variables) {
+					var variable = variables.findWhere({name: variableName});
+					if (variable) {
+						return variable.get('value');
+					}
+				}
+			}
 		},
 
 		_toggleAwayStatus: function(person) {
