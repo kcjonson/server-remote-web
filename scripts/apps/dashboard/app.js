@@ -25,13 +25,15 @@ require([
 	'app/models/Indigo',
 	'app/views/Navigation',
 	'app/views/Header',
-	'app/util/CurrentUser'
+	'app/util/CurrentUser',
+	'app/util/Error'
 ], function(
 	Router,
 	IndigoModel,
 	Navigation,
 	Header,
-	CurrentUser
+	CurrentUser,
+	ErrorUtil
 ){
 
 
@@ -85,7 +87,8 @@ require([
 			$('body').addClass('loaded');
 			router.navigate('login', {trigger: true});
 		} else if (error) {
-			console.error('There was an error with the authentication server')
+			$('body').addClass('loaded');
+			ErrorUtil.show(error, router);
 		} else {
 			indigoModel.once("change", function(){
 				$('body').addClass('loaded');

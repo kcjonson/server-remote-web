@@ -6,6 +6,7 @@
 @import url('./apps/dashboard/views/Navigation.less');
 @import url('./apps/dashboard/views/Header.less');
 @import url('./apps/dashboard/views/Login.less');
+@import url('./apps/dashboard/views/Error.less');
 
 
 	@base-color: rgb(44, 42, 42);
@@ -75,8 +76,15 @@
 			overflow-x: hidden;
 			-webkit-overflow-scrolling: touch;
 			height: 100vh;
-			background-color: #fff;
-			color: #111;
+
+			&:not(.dark) {
+				background-color: #fff;
+				color: #111;
+			}
+
+			&.dark {
+				color: #fff;
+			}
 		}
 
 		> .footer {

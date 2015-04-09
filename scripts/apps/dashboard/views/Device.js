@@ -57,6 +57,7 @@ define([
 					break;
 				case 'light':
 					detailsType = Light;
+					$(this._typeNode).addClass('icon fa fa-lightbulb-o');
 					break;
 			}
 

@@ -2,26 +2,22 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'text!./Login.html',
-	'../util/CurrentUser'
+	'text!./Error.html',
+	'app/util/Error'
 ], function(
 	$,
 	_,
 	Backbone,
 	templateString,
-	CurrentUser
+	ErrorUtil
 ){
 	
-
-	var LOGIN_URL = SERVER + 'api/login/';
-
-
 	return Backbone.View.extend({
 
 
 	// Init
 
-		name: 'Login',
+		name: 'Error',
 		darkBackground: true,
 		hideHeader: true,
 		hideNavigation: true,
@@ -49,7 +45,7 @@ define([
 				}, this));
 			};
 
-			this._submitNode.addEventListener('click', this._doSubmit.bind(this));
+			//this._submitNode.addEventListener('click', this._doSubmit.bind(this));
 			
 		},
 
@@ -59,6 +55,14 @@ define([
 
 		show: function() {
 			this.$el.removeClass('hidden');
+			var error = ErrorUtil.getAll()[0];
+			var errorText;
+			if (typeof error == 'string') {
+				errorText = error;
+			} else if (error.statusText == 'timeout') {
+				errorText = 'The server appears to be down!'
+			};
+			this._errorNode.innerHTML = errorText;
 		},
 
 		hide: function() {
@@ -66,32 +70,7 @@ define([
 		},
 
 
-	// Private Functions
 
-		_doSubmit: function() {
-			var data = {
-				username: this._usernameNode.value,
-				password: this._passwordNode.value
-			};
-			$.post(LOGIN_URL, data, function(data){
-				if (!data.error) {
-					this._onSuccess(data);
-				} else {
-					this._onError(data.error);
-				}
-			}.bind(this)).error(this._onError.bind(this));
-		},
-
-		_onSuccess: function(userData) {
-			//console.log('Login._onSuccess()');
-			CurrentUser.set(userData);
-			this.router.navigate('dashboard', {trigger: true})
-		},
-
-		_onError: function(error) {
-			//console.log('Login._onError()', error)
-			this._errorNode.innerHTML = error;
-		}
 
 
 	});

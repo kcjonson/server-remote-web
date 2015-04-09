@@ -8,7 +8,8 @@ define([
 	'app/views/Alarm',
 	'app/views/Device',
 	'app/views/Admin',
-	'app/views/Login'
+	'app/views/Login',
+	'app/views/Error'
 ], function(
 	$,
 	_,
@@ -19,13 +20,13 @@ define([
 	Alarm,
 	Device,
 	Admin,
-	Login
+	Login,
+	Error
 ){
 
 	// Store the loaded views in an object,
 	// so that we don't have to load them mutliple times.
 	var views = {};
-
 
 	return Backbone.Router.extend({
 
@@ -36,6 +37,7 @@ define([
 			'alarm': 'Alarm',
 			'admin': 'Admin',
 			'login': 'Login',
+			'error': 'Error',
 			'device/:device': 'Device'
 		},
 		
@@ -75,6 +77,8 @@ define([
 							} else {
 								this.trigger('show:navigation');
 							}
+							//this.$el.toggleClass()
+							this.el.toggleClass('dark', v.darkBackground === true)
 							v.show(params);
 						}
 					}

@@ -24,16 +24,21 @@ define([
 		},
 
 		authenticate: function(callback) {
-			$.get('/api/users/current', function(response){
-				if (!response.error) {
-					MODEL.set(response);
-					callback();
-				} else {
-					callback(response.error)
-				}
-			}.bind(this)).error(function(error){
-				callback(error)
+			$.ajax({
+				url: '/api/users/current',
+				timeout: 6000,
+				success: function(response){
+					if (!response.error) {
+						MODEL.set(response);
+						callback();
+					} else {
+						callback(response.error)
+					}
+				}.bind(this)
+			}).error(function(error){
+			 	callback(error)
 			}.bind(this));
+
 		},
 
 	}
