@@ -15,7 +15,7 @@ define([
 	return Backbone.RelationalModel.extend({
 
 		idAttribute: '_id',
-		urlRoot: '/api/users/user'
+		urlRoot: SERVER + 'api/users/user'
 
 	});
 

@@ -12,26 +12,37 @@
 	> .content {
 		background-color: lighten(@base-color, 10%);
 		color: #fff;
-		padding-top: 20px; // iOS App Mode ONLY.  Height of native status bar at top.
-		position: relative;
+		display: table;
+		width: 100%;
+
+		& > * {
+			display: table-cell;
+			vertical-align: middle;
+			padding-top: 30px;
+			padding-bottom: 8px;
+		}
 
 		h1 {
 			font-weight: lighter;
-			padding: 2vh 0 2vh 1rem;
 			font-size: 1.3rem;
+			padding-left: 1em;
+		}
+
+		.user-outer {
+			padding-right: 1em;
+			text-align: right;
+			width: 40px;
 		}
 
 		.user {
-			position: absolute;
-			right: 10px;
-			top: 20px;
+			display: inline-block;
 			height: 35px;
 			width: 35px;
 			overflow: hidden;
 			background-color: rgba(0,0,0,0.4);
 			border-radius: 40px;
 			text-align: center;
-			line-height: 38px;
+			line-height: 36px;
 			font-size: 14px;
 			opacity: (.6);
 		}

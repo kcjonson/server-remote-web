@@ -61,7 +61,9 @@ define([
 				errorText = error;
 			} else if (error.statusText == 'timeout') {
 				errorText = 'The server appears to be down!'
-			};
+			} else if (error.error) {
+				errorText = error.error;
+			}
 			this._errorNode.innerHTML = errorText;
 		},
 

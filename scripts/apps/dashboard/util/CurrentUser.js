@@ -25,7 +25,7 @@ define([
 
 		authenticate: function(callback) {
 			$.ajax({
-				url: '/api/users/current',
+				url: SERVER + 'api/users/current',
 				timeout: 6000,
 				success: function(response){
 					if (!response.error) {
@@ -35,8 +35,8 @@ define([
 						callback(response.error)
 					}
 				}.bind(this)
-			}).error(function(error){
-			 	callback(error)
+			}).error(function(err){
+			 	callback(err)
 			}.bind(this));
 
 		},
