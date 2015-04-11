@@ -32,8 +32,10 @@ define([
 			this.router.on('show:header', this.show.bind(this));
 			this.router.on('hide:header', this.hide.bind(this));
 
-			//this.indigoModel.on("request", _.bind(this._onIndigoModelRequest, this));
-			//this.indigoModel.on("sync", _.bind(this._onIndigoModelSync, this));
+			// this.indigoModel.on("request", _.bind(this._onIndigoModelRequest, this));
+			// this.indigoModel.on("sync", _.bind(this._onIndigoModelSync, this));
+
+			this._userNode.addEventListener('click', this._onUserNodeClick.bind(this));
 
 			CurrentUser.getModel().on('change', this._onCurrentUserChange.bind(this));
 
@@ -72,6 +74,9 @@ define([
 
 		},
 
+
+	// Private Events
+
 		_onIndigoModelRequest: function (model, xhr, options) {
 			//console.log('app._onIndigoModelRequest()', model, xhr, options);
 			$(this._statusNode).removeClass('hidden');
@@ -89,6 +94,10 @@ define([
 			this._userNode.innerHTML = firstLetter + lastLetter;
 
 
+		},
+
+		_onUserNodeClick: function() {
+			this.router.navigate('user', {trigger: true});
 		}
 
 

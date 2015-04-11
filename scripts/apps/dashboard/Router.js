@@ -9,7 +9,8 @@ define([
 	'app/views/Device',
 	'app/views/Admin',
 	'app/views/Login',
-	'app/views/Error'
+	'app/views/Error',
+	'app/views/User'
 ], function(
 	$,
 	_,
@@ -21,7 +22,8 @@ define([
 	Device,
 	Admin,
 	Login,
-	Error
+	Error,
+	User
 ){
 
 	// Store the loaded views in an object,
@@ -38,6 +40,7 @@ define([
 			'admin': 'Admin',
 			'login': 'Login',
 			'error': 'Error',
+			'user': 'User',
 			'device/:device': 'Device'
 		},
 		
