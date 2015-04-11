@@ -83,7 +83,7 @@ define([
 		},
 
 		_onCurrentUserChange: function(model) {
-			console.log('user change', model.get('name'), arguments)
+			//console.log('user change', model.get('name'), arguments)
 			var firstLetter = model.get('name').first.substr(0,1);
 			var lastLetter = model.get('name').last.substr(0,1);
 			this._userNode.innerHTML = firstLetter + lastLetter;

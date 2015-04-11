@@ -76,6 +76,7 @@ define([
 
 	// Init
 		name: 'Dashboard',
+		fetchData: true,
 
 		initialize: function(args) {
 			this.indigoModel = args.indigoModel;

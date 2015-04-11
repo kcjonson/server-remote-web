@@ -22,9 +22,31 @@ define([
 ){
 
 
+	var POLL_TIME = 5000;
 
 	
 	return Backbone.RelationalModel.extend({
+
+		pollingEnabled: true,
+
+		initialize: function() {
+			this.once('sync', function() {
+				setTimeout(function(){
+					this.fetchAndPoll();
+				}.bind(this), POLL_TIME)
+			});
+		},
+
+		fetchAndPoll: function() {
+			if (this.pollingEnabled) {
+				this.fetch();
+				this.once('sync', function() {
+					setTimeout(function(){
+						this.fetchAndPoll();
+					}.bind(this), POLL_TIME)
+				});
+			}
+		},
 
 		url: function() {
 			return SERVER + 'api/indigo'

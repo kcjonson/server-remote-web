@@ -18,6 +18,7 @@ define([
 
 	// Init
 		name: 'Alarm',
+		fetchData: true,
 
 		initialize: function(args) {
 			this.indigoModel = args.indigoModel;

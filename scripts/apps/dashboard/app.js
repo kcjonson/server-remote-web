@@ -115,6 +115,21 @@ require([
 
 
 
+// Cordova Specific
+
+	if (!!window.cordova) {
+		document.addEventListener("deviceready", _onDeviceReady, false);
+	} 
+
+	function _onDeviceReady() {
+		document.addEventListener("resume", _onResume, false);
+	}
+
+	function _onResume() {
+		indigoModel.fetch();
+	}
+
+
 
 
 });

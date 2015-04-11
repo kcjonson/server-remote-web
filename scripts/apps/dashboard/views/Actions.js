@@ -20,6 +20,7 @@ define([
 
 	// Init
 		name: 'Actions',
+		fetchData: true,
 		attributes: {
 			'class': 'scrollable'
 		},

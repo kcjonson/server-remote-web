@@ -18,6 +18,7 @@ define([
 
 	// Init
 		name: 'Devices',
+		fetchData: true,
 		attributes: {
 			'class': 'scrollable'
 		},

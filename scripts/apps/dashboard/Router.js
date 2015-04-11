@@ -77,15 +77,15 @@ define([
 							} else {
 								this.trigger('show:navigation');
 							}
-							//this.$el.toggleClass()
+							if (v.fetchData === true) {
+								args.indigoModel.fetch();
+							}
+							args.indigoModel.pollingEnabled === v.fetchData;
 							this.el.toggleClass('dark', v.darkBackground === true)
 							v.show(params);
 						}
 					}
 				}
-
-				// Update Model
-				args.indigoModel.fetch();
 
 			})
 		},
@@ -100,6 +100,10 @@ define([
 
 		Actions: function() {
 			//console.log('route to Actions');
+		},
+
+		Error: function() {
+
 		}
 		
 		
