@@ -32,20 +32,23 @@ define([
 		initialize: function() {
 			this.once('sync', function() {
 				setTimeout(function(){
-					this.fetchAndPoll();
+					this.fetch();
 				}.bind(this), POLL_TIME)
 			});
 		},
 
-		fetchAndPoll: function() {
+		fetch: function() {
+			if (this._pollTimeout) {
+				clearTimeout(this._pollTimeout)
+			}
 			if (this.pollingEnabled) {
-				this.fetch();
 				this.once('sync', function() {
-					setTimeout(function(){
-						this.fetchAndPoll();
+					this._pollTimeout = setTimeout(function(){
+						this.fetch();
 					}.bind(this), POLL_TIME)
 				});
 			}
+			Backbone.RelationalModel.prototype.fetch.call(this);
 		},
 
 		url: function() {

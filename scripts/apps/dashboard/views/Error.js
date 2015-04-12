@@ -21,6 +21,7 @@ define([
 		darkBackground: true,
 		hideHeader: true,
 		hideNavigation: true,
+		fetchData: false,
 
 		initialize: function(args) {
 			this.router = args.router;			

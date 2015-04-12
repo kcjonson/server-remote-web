@@ -1,0 +1,57 @@
+
+
+	.User {
+
+		label {
+			display: block;
+			margin-top: 1em;
+
+			.text {
+				display: block;
+				margin-bottom: .2em;
+			}
+
+			input {
+				width: 100%;
+			}
+		}
+
+		.checkins {
+
+			ol {
+				display: table;
+				width: 100%;
+				
+
+				> * {
+					display: table-row;
+
+					> * {
+						display: table-cell;
+					}
+				}
+			}
+
+			.date {
+				font-size: .9em;
+				color: #aaa;
+				white-space: nowrap;
+			}
+
+			.name {
+				width: 100%;
+				padding-left: 1em;
+				padding-top: .2em;
+			}
+
+			li:first-child {
+				.name {
+					padding-top: 0;
+				}
+			}
+
+
+		}
+
+
+	}

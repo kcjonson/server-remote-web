@@ -81,9 +81,12 @@ define([
 								this.trigger('show:navigation');
 							}
 							if (v.fetchData === true) {
+								args.indigoModel.pollingEnabled = true;
 								args.indigoModel.fetch();
+							} else {
+								args.indigoModel.pollingEnabled = false;
 							}
-							args.indigoModel.pollingEnabled === v.fetchData;
+							
 							this.el.toggleClass('dark', v.darkBackground === true)
 							v.show(params);
 						}
