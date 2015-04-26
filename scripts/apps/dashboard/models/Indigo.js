@@ -41,7 +41,7 @@ define([
 			if (this._pollTimeout) {
 				clearTimeout(this._pollTimeout)
 			}
-			if (this.pollingEnabled) {
+			if (this.pollingEnabled && false) {
 				this.once('sync', function() {
 					this._pollTimeout = setTimeout(function(){
 						this.fetch();

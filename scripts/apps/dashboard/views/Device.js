@@ -27,7 +27,8 @@ define([
 		templateString: templateString,
 
 		initialize: function(args) {
-			this.indigoModel = args.indigoModel;
+			this.appModel = args.appModel;
+			this.indigoModel = args.appModel.indigoModel;
 			View.prototype.initialize.call(this);
 			//this.indigoModel.on("change", _.bind(this._onIndigoModelChange, this));
 		},

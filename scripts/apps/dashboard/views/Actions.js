@@ -30,7 +30,8 @@ define([
 			//this._initializeModel();
 			//this._createActions();
 
-			this.indigoModel = args.indigoModel;
+			this.appModel = args.appModel;
+			this.indigoModel = args.appModel.indigoModel;
 			this.indigoModel.on("change", _.bind(this._onIndigoModelChange, this));
 			this._populateActionsList();
 		},

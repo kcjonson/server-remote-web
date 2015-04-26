@@ -26,7 +26,8 @@ define([
 		initialize: function(args) {	
 			this._initializeTemplate();
 			this.router = args.router;
-			this.indigoModel = args.indigoModel;
+			this.appModel = args.appModel;
+			this.indigoModel = args.appModel.indigoModel;
 			this._populateDevicesList();
 			this.indigoModel.on("change", _.bind(this._onIndigoModelChange, this));
 			$(this._typeInput).on("change", _.bind(this._onGroupingChange, this));

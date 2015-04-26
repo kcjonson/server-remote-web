@@ -55,7 +55,7 @@ define([
 					var viewPrototype = eval(currentView);
 					if (viewPrototype) {
 						views[currentView] = new viewPrototype({
-							indigoModel: args.indigoModel,
+							appModel: args.appModel,
 							router: this
 						});
 						this.el.append(views[currentView].$el);
@@ -81,10 +81,10 @@ define([
 								this.trigger('show:navigation');
 							}
 							if (v.fetchData === true) {
-								args.indigoModel.pollingEnabled = true;
-								args.indigoModel.fetch();
+								args.appModel.pollingEnabled = true;
+								args.appModel.fetch();
 							} else {
-								args.indigoModel.pollingEnabled = false;
+								args.appModel.pollingEnabled = false;
 							}
 							
 							this.el.toggleClass('dark', v.darkBackground === true)
@@ -94,22 +94,6 @@ define([
 				}
 
 			})
-		},
-
-		Dashboard: function() {
-			//console.log('route to Dashboard');
-		},
-
-		Devices: function() {
-			//console.log('route to Devices');
-		},
-
-		Actions: function() {
-			//console.log('route to Actions');
-		},
-
-		Error: function() {
-
 		}
 		
 		

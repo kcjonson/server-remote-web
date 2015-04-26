@@ -22,14 +22,14 @@ require.config({
 
 require([
 	'app/Router',
-	'app/models/Indigo',
+	'app/models/App',
 	'app/views/Navigation',
 	'app/views/Header',
 	'app/util/CurrentUser',
 	'app/util/Error'
 ], function(
 	Router,
-	IndigoModel,
+	AppModel,
 	Navigation,
 	Header,
 	CurrentUser,
@@ -41,7 +41,6 @@ require([
 	document.addEventListener("touchstart", function() {},false);
 
 
-	var indigoModel;
 	var router;
 	var navigation;
 	var header;
@@ -52,21 +51,23 @@ require([
 
 // Startup
 
-	Backbone.history.start({
-		root: '/server-remote-web/',
-		pushState: true
-	});
 
 
-	// Set Up Indigo Model
-	indigoModel = new IndigoModel({id: '1'});
-	indigoModel.on("error", _.bind(_onIndigoModelError, this));
+	var appModel = new AppModel();
+
+
+
 
 
 	// Set Up Router & Start History
 	router = new Router({
-		indigoModel: indigoModel,
+		appModel: appModel,
 		el: $('body > .views')
+	});
+
+	Backbone.history.start({
+		root: '/server-remote-web/',
+		pushState: true
 	});
 
 
@@ -78,8 +79,10 @@ require([
 	header = new Header({
 		el: $('body > .header'),
 		router: router,
-		indigoModel: indigoModel
+		appModel: appModel
 	});
+
+
 
 
 	CurrentUser.authenticate(function(error){
@@ -90,28 +93,16 @@ require([
 			$('body').addClass('loaded');
 			ErrorUtil.show(error, router);
 		} else {
-			indigoModel.once("change", function(){
+			appModel.once("change", function(){
 				$('body').addClass('loaded');
 				router.navigate('dashboard', {trigger: true});
 			});
-			indigoModel.fetch({});
+			appModel.fetch({});
 		}
 	});
 
 
 
-// Event Handlers
-
-	// This should be factored out to be on ALL models.
-	function _onIndigoModelError(model, response) {
-		switch (response.status) {
-			case 401:
-				router.navigate('login', {trigger: true});
-				break;
-			default:
-				console.error('app._onIndigoModelError(): Un unrecognized error has occured');
-		}
-	}
 
 
 
@@ -126,7 +117,8 @@ require([
 	}
 
 	function _onResume() {
-		indigoModel.fetch();
+		//indigoModel.fetch();
+		appModel.fetch();
 	}
 
 

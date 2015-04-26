@@ -3,15 +3,13 @@ define([
 	'underscore',
 	'backbone',
 	'text!./Dashboard.html',
-	'./actions/Action',
-	'app/models/Indigo'
+	'./actions/Action'
 ], function(
 	$,
 	_,
 	Backbone,
 	templateString,
-	Action,
-	IndigoModel
+	Action
 ){
 	
 
@@ -79,7 +77,9 @@ define([
 		fetchData: true,
 
 		initialize: function(args) {
-			this.indigoModel = args.indigoModel;
+			this.appModel = args.appModel;
+			this.indigoModel = this.appModel.indigoModel;
+			this.alarmsModel = this.appModel.alarmsModel;
 			this.router = args.router;
 			
 			this._initializeTemplate();
@@ -89,6 +89,7 @@ define([
 			this._isAwayMargaretNode.addEventListener("click", _.bind(this._onIsAwayMargaretClick, this));
 
 			this.indigoModel.on('change', _.bind(this._onIndigoModelChange, this));
+			this.alarmsModel.on('change add remove reset sort destroy', this._onAlarmsModelChange.bind(this));
 		},
 
 		
@@ -135,26 +136,18 @@ define([
 		},
 	
 		_onAlarmStatusClick: function() {
-			
-			var alarmOnModel = this.indigoModel.get('variables').findWhere({name: 'AlarmOn'});
-			var alarmRunningModel = this.indigoModel.get('variables').findWhere({name: 'AlarmRunning'});
-			var isRunning = alarmRunningModel.get('value');
-			var isOn = alarmOnModel.get('value') == true;
-
-			// TEMP HACK
-			alarmOnModel.on("change", _.bind(this._onIndigoModelChange, this));
-			alarmRunningModel.on("change", _.bind(this._onIndigoModelChange, this));
-
-			if (isRunning) {
-				alarmRunningModel.save({
-					value: false
-				}, {patch: true});
-			} else {
-				alarmOnModel.save({
-					value: !isOn
-				}, {patch: true});
-			};
-
+			var alarmModel = this.alarmsModel.at(0);
+			if (alarmModel) {
+				if (alarmModel.get('running')) {
+					alarmModel.save({
+						running: false
+					}, {patch: true});
+				} else {
+					alarmModel.save({
+						isOn: !alarmModel.get('isOn')
+					}, {patch: true});
+				};
+			}
 		},
 
 		_onIsAwayMargaretClick: function() {
@@ -174,27 +167,40 @@ define([
 			this._updateDisplay();
 		},
 
+		_onAlarmsModelChange: function() {
+			console.log('alarms change')
+			this._updateAlarmsDisplay();
+		},
+
 
 
 	// Private
 
+
+		_updateAlarmsDisplay: function() {
+			var alarmModel = this.alarmsModel.at(0);
+			if (alarmModel) {
+				var hour = alarmModel.get('hour');
+				var minute = alarmModel.get('minute');
+				var isOn = alarmModel.get('isOn');
+				var isRunning = alarmModel.get('running');
+
+				if (typeof hour === 'number' && typeof minute === 'number') {
+					if (minute.toString().length < 2) {
+						minute = "0" + minute;
+					}
+					this._alarmTimeNode.innerHTML = hour + ':' + minute;
+				}	
+				$(this._alarmIsOnNode).toggleClass('true', isOn);
+				$(this._alarmIsOnNode).toggleClass('hidden', isRunning);
+				$(this._alarmIsRunningNode).toggleClass('hidden', !isRunning);
+			}
+		},
+
 		_updateDisplay: function() {
 			//console.log('Update Display', this.indigoModel);
 
-			// Alarm
-			var hour = this._getVariable('AlarmHour');
-			var minute = this._getVariable('AlarmMinute');
-			var isOn = this._getVariable('AlarmOn');
-			var isRunning = this._getVariable('AlarmRunning');
-			if (hour && minute) {
-				if (minute.toString().length < 2) {
-					minute = "0" + minute;
-				}
-				this._alarmTimeNode.innerHTML = hour + ':' + minute;
-			}	
-			$(this._alarmIsOnNode).toggleClass('true', isOn);
-			$(this._alarmIsOnNode).toggleClass('hidden', isRunning);
-			$(this._alarmIsRunningNode).toggleClass('hidden', !isRunning);
+
 
 			// Away Status
 			var isAwayKevin = this._getVariable('isAwayKevin');

@@ -9,8 +9,8 @@ define([
 ){
 	
 	return Backbone.Model.extend({
-		urlRoot: SERVER + 'api/dashboard'
-	
+		urlRoot: SERVER + 'api/alarms',
+		idAttribute: '_id'
 	});
 
 });

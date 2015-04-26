@@ -87,6 +87,13 @@ define([
 			//console.log('Login._onSuccess()');
 			CurrentUser.set(userData);
 			this.router.navigate('dashboard', {trigger: true})
+
+			// appModel.once("change", function(){
+			// 	router.navigate('dashboard', {trigger: true});
+			// });
+			// appModel.fetch({});
+
+
 		},
 
 		_onError: function(error) {

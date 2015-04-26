@@ -2,14 +2,12 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'text!./Alarm.html',
-	'app/models/Indigo'
+	'text!./Alarm.html'
 ], function(
 	$,
 	_,
 	Backbone,
-	templateString,
-	IndigoModel
+	templateString
 ){
 
 
@@ -18,12 +16,13 @@ define([
 
 	// Init
 		name: 'Alarm',
-		fetchData: true,
+		fetchData: false,
 
 		initialize: function(args) {
-			this.indigoModel = args.indigoModel;
+			this.appModel = args.appModel;
+			this.alarmsModel = this.appModel.alarmsModel;
 			this._initializeTemplate();
-			this.indigoModel.on('change', _.bind(this._onIndigoModelChange, this));
+			this.alarmsModel.on('change', this._onAlarmsModelChange.bind(this));
 		},
 		
 		_initializeTemplate: function() {
@@ -65,45 +64,33 @@ define([
 	// Private Events
 
 		_onAdjustTimeClick: function(node) {
-			var type = node.dataset.adjustType;
-			var value = parseInt(node.dataset.adjustValue, 10);
-			var date = this._getDateFromModel();
-			switch (type) {
-				case 'hours':
-					date.setHours(date.getHours() + value);
-					break;
-				case 'minutes':
-					date.setMinutes(date.getMinutes() + value);
-					break;
-			}
-			var variables = this.indigoModel.get('variables');
 
-			// Set Hours
-			var hourModel = variables.findWhere({name: 'AlarmHour'});
-			hourModel.save({
-				value: date.getHours()
-			}, {patch: true});
+			var alarmModel = this.alarmsModel.at(0);
+			if (alarmModel) {
 
-			// Set Minutes
-			var minuteModel = variables.findWhere({name: 'AlarmMinute'});
-			minuteModel.save({
-				value: date.getMinutes()
-			}, {patch: true});
+				var type = node.dataset.adjustType;
+				var value = parseInt(node.dataset.adjustValue, 10);
+				var date = this._getDateFromModel();
 
-			// Turn the alarm on with any changes
-			var alarmOnModel = this.indigoModel.get('variables').findWhere({name: 'AlarmOn'});
-			var isOn = alarmOnModel.get('value')
-			if (!isOn) {
-				alarmOnModel.save({
-					value: true
-				}, {patch: true});
+				switch (type) {
+					case 'hours':
+						date.setHours(date.getHours() + value);
+						break;
+					case 'minutes':
+						date.setMinutes(date.getMinutes() + value);
+						break;
+				}
+
+				alarmModel.save({
+					hour: date.getHours(),
+					minute: date.getMinutes(),
+					isOn: true
+				}, {patch: true})
 			}
 
-			// The models are not being watched, do it manually.
-			this._updateDisplay();
 		},
 
-		_onIndigoModelChange: function() {
+		_onAlarmsModelChange: function() {
 			this._updateDisplay();
 		},
 
@@ -121,12 +108,13 @@ define([
 		},
 
 		_getDateFromModel: function() {
-			var variables = this.indigoModel.get('variables');
-			var hour = parseInt(variables.findWhere({name: 'AlarmHour'}).get('value'), 10);
-			var minute = parseInt(variables.findWhere({name: 'AlarmMinute'}).get('value'), 10);
-			var date = new Date();
-			date.setMinutes(minute);
-			date.setHours(hour);
+			var date;
+			var alarmModel = this.alarmsModel.at(0);
+			if (alarmModel) {
+				date = new Date();
+				date.setMinutes(alarmModel.get('minute'));
+				date.setHours(alarmModel.get('hour'));
+			}
 			return date;
 		}
 
