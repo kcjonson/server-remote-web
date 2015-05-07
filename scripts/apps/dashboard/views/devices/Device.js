@@ -122,7 +122,7 @@ define([
 						this.model.save({
 						 	brightness: newBrightness
 						}, {patch: true});
-					}
+					}.bind(this);
 					break;
 				case 'NEST_THERMOSTAT':
 					//console.log('Thermostat', this.model)
@@ -156,7 +156,7 @@ define([
 							 	state: newState
 							}, {patch: true});				
 						}
-					}
+					}.bind(this);
 
 					break;
 			}

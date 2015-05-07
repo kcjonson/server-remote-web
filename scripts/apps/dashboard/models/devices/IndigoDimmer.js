@@ -11,7 +11,9 @@ define([
 
 	return Backbone.Model.extend({
 		idAttribute: "_id",
-		urlRoot: '/api/devices',
+		url: function() {
+			return SERVER + 'api/devices/' + this.id;
+		},
 		defaults: {
 			displayType: 'Dimmer'
 		}

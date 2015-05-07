@@ -37,6 +37,10 @@ require([
 ){
 
 
+	var isCordova = !!window.cordova;
+
+
+
 	// Fun Hack for iOS
 	document.addEventListener("touchstart", function() {},false);
 
@@ -88,21 +92,22 @@ require([
 			$('body').addClass('loaded');
 			ErrorUtil.show(error, router);
 		} else {
-			_startHistory();
 			appModel.once("sync:all", function(){
 				setTimeout(function(){
 					$('body').addClass('loaded');
 				}.bind(this), 1000)
 			});
+			_startHistory();
 		}
 	});
 
 	function _startHistory(silent) {
 		// This needs go after things that subscribe to route
 		// events as it triggers the initial "route" on start()
+		pushState = isCordova ? false : true;
 		Backbone.history.start({
 			root: '/server-remote-web/',
-			pushState: true,
+			pushState: pushState,
 			silent: silent || false
 		});
 	}
@@ -111,7 +116,7 @@ require([
 
 // Cordova Specific
 
-	if (!!window.cordova) {
+	if (isCordova) {
 		document.addEventListener("deviceready", _onDeviceReady, false);
 	} 
 
