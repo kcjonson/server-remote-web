@@ -1,0 +1,42 @@
+
+	.Dashboard .User {
+
+
+		color: #ccc;
+
+		> * {
+			padding-top: .2em;
+			padding-bottom:  .2em;
+		}
+
+
+		.name {
+			width: 100%;
+		}
+
+		.timestamp {
+			padding-right: 1em;
+			font-size: .8rem;
+		}
+
+		.status {
+			text-align: right;
+
+			font-size: 2em;
+			&:active {
+				color: @highlight-color !important;
+			}
+
+		}
+
+		&.isHome {
+			color: inherit;
+
+			.status {
+				color: #96CA2D;
+			}
+		}
+
+
+
+	}

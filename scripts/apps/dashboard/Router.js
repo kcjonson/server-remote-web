@@ -34,6 +34,7 @@ define([
 
 		routes: {
 			'dashboard': 'Dashboard',
+			'': 'Dashboard',
 			'devices': 'Devices',
 			'actions': 'Actions',
 			'alarm': 'Alarm',

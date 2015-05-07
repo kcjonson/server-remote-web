@@ -3,13 +3,15 @@ define([
 	'underscore',
 	'backbone',
 	'text!./Dashboard.html',
-	'./actions/Action'
+	'./actions/Action',
+	'./dashboard/User'
 ], function(
 	$,
 	_,
 	Backbone,
 	templateString,
-	Action
+	Action,
+	User
 ){
 	
 
@@ -75,21 +77,24 @@ define([
 	// Init
 		name: 'Dashboard',
 		fetchData: true,
+		_userViews: {},
 
 		initialize: function(args) {
 			this.appModel = args.appModel;
 			this.indigoModel = this.appModel.indigoModel;
 			this.alarmsModel = this.appModel.alarmsModel;
+			this.usersModel = this.appModel.usersModel;
+			this.devicesModel = this.appModel.devicesModel;
 			this.router = args.router;
 			
 			this._initializeTemplate();
 			this._alarmTimeNode.addEventListener("click", _.bind(this._onAlarmTimeClick, this));
 			this._alarmStatusNode.addEventListener("click", _.bind(this._onAlarmStatusClick, this));
-			this._isAwayKevinNode.addEventListener("click", _.bind(this._onIsAwayKevinClick, this));
-			this._isAwayMargaretNode.addEventListener("click", _.bind(this._onIsAwayMargaretClick, this));
 
 			this.indigoModel.on('change', _.bind(this._onIndigoModelChange, this));
 			this.alarmsModel.on('change add remove reset sort destroy', this._onAlarmsModelChange.bind(this));
+			this.usersModel.on('change add remove reset sort destroy', _.bind(this._onUsersModelChange, this));
+			this.devicesModel.on('all', _.bind(this._onDevicesModelAll, this));
 		},
 
 		
@@ -150,15 +155,6 @@ define([
 			}
 		},
 
-		_onIsAwayMargaretClick: function() {
-			this._toggleAwayStatus('Margaret');
-		},
-
-		_onIsAwayKevinClick: function() {
-			this._toggleAwayStatus('Kevin');
-		},
-		
-		
 		
 	// Data Event Handlers
 
@@ -168,14 +164,43 @@ define([
 		},
 
 		_onAlarmsModelChange: function() {
-			console.log('alarms change')
 			this._updateAlarmsDisplay();
 		},
+
+		_onUsersModelChange: function() {
+			//console.log('UsersModel:change', model);
+			this._updateUsersDisplay();
+		},
+
+		_onDevicesModelAll: function() {
+			console.log('all')
+		},
+
 
 
 
 	// Private
 
+		_updateUsersDisplay: function() {
+			if (this._userViews) {
+				for (property in this._userViews) {
+					if (this._userViews.hasOwnProperty(property)) {
+				        var userView = this._userViews[property];
+				        var userId = userView.userModel.get('_id');
+				        if (!this.usersModel.findWhere({'_id': userId})) {
+				        	userView.remove();
+				        	delete this._userViews[property]
+				        }
+				    }
+				}
+			}
+			this.usersModel.forEach(function(userModel){
+				var userId = userModel.get('_id');
+				if (!this._userViews[userId]) {
+					this._userViews[userId] = new User({userModel: userModel}).placeAt(this._usersNode);
+				}
+			}.bind(this));
+		},
 
 		_updateAlarmsDisplay: function() {
 			var alarmModel = this.alarmsModel.at(0);
@@ -198,51 +223,32 @@ define([
 		},
 
 		_updateDisplay: function() {
-			//console.log('Update Display', this.indigoModel);
+			console.log('Update Display', this.devicesModel);
 
 
+			var numLights = this.devicesModel.where({type: "INDIGO_DIMMER"}).length;
 
-			// Away Status
-			var isAwayKevin = this._getVariable('isAwayKevin');
-			var isAwayMargaret = this._getVariable('isAwayMargaret');
-			$(this._isAwayKevinNode).toggleClass('true', !isAwayKevin);
-			$(this._isAwayMargaretNode).toggleClass('true', !isAwayMargaret);
+			var numLightsOn = this.devicesModel.filter(function(deviceModel){
+				return deviceModel.get('type') === 'INDIGO_DIMMER' 
+				&& deviceModel.get('brightness') > 0;
+			}).length;
 
-			// Devices
-			// So ... this shold totally be moved to the collection.
-			var devicesCollection = this.indigoModel.get('devices');
-			var numLights = 0;
-			var numLightsOn = 0;
-			var numOutsideLights = 0;
-			var numOutsideLightsOn = 0;
+			var numOutsideLights = this.devicesModel.filter(function(deviceModel){
+				return deviceModel.get('type') === 'INDIGO_DIMMER' 
+					&& deviceModel.get('name').indexOf('Outside') > -1;
+			}).length;
+
+			var numOutsideLightsOn = this.devicesModel.filter(function(deviceModel){
+				return deviceModel.get('type') === 'INDIGO_DIMMER' 
+					&& deviceModel.get('brightness') > 0 
+					&& deviceModel.get('name').indexOf('Outside') > -1;
+			}).length;
+
+
+			// TODO
 			var numThermostatsOn = 0;
-			devicesCollection.forEach(function (deviceModel) {
-				switch (deviceModel.get('category')) {
-					case 'light':
-						numLights += 1;
-						var isOutsideLight = false;
-						var deviceName = deviceModel.get('name');
-						switch (deviceName) {
-							case 'Outside Front Overhead Lights':
-							case 'Outside Front Door Wall Sconce':
-								numOutsideLights += 1;
-								isOutsideLight = true;
-								break;
-						}
-						if (deviceModel.get('brightness') > 0) {
-							numLightsOn += 1;
-							if (isOutsideLight) {
-								numOutsideLightsOn += 1;
-							}
-						}
-						break;
-					case 'thermostat':
-						if (deviceModel.get('hvacHeaterIsOn') === true) {
-							numThermostatsOn += 1;
-						}
-						break;
-				}
-			}, this);
+
+
 			this._numLightsOnNode.innerHTML = numLightsOn;
 			if (numThermostatsOn > 0) {
 				this._thermostatsStatusNode.innerHTML = 'On'
@@ -250,14 +256,14 @@ define([
 				this._thermostatsStatusNode.innerHTML = 'Off'
 			}
 
-			var iTunesDevice = devicesCollection.findWhere({name: 'iTunes'});
+			//var iTunesDevice = devicesCollection.findWhere({name: 'iTunes'});
 			this._createActions({
 				numLights: numLights,
 				numLightsOn: numLightsOn,
 				numOutsideLights: numOutsideLights,
 				numOutsideLightsOn: numOutsideLightsOn,
-				isDaylight: this._getVariable('isDaylight'),
-				iTunesIsPlaying: iTunesDevice && iTunesDevice.get('displayRawState') == 'playing'
+				isDaylight: this._getVariable('isDaylight')
+				//iTunesIsPlaying: iTunesDevice && iTunesDevice.get('displayRawState') == 'playing'
 			});
 		},
 
@@ -271,15 +277,6 @@ define([
 					}
 				}
 			}
-		},
-
-		_toggleAwayStatus: function(person) {
-			var variableModel = this.indigoModel.get('variables').findWhere({name: 'isAway' + person});
-			var value = variableModel.get('value');
-			variableModel.on("change", _.bind(this._updateDisplay, this));
-			variableModel.save({
-				value: !value
-			}, {patch: true});
 		},
 
 		_createActions: function(conditions) {

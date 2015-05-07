@@ -57,19 +57,11 @@ require([
 
 
 
-
-
 	// Set Up Router & Start History
 	router = new Router({
 		appModel: appModel,
 		el: $('body > .views')
 	});
-
-	Backbone.history.start({
-		root: '/server-remote-web/',
-		pushState: true
-	});
-
 
 	// Create Common UI
 	navigation = new Navigation({
@@ -85,24 +77,35 @@ require([
 
 
 
+
 	CurrentUser.authenticate(function(error){
 		if (error && error.status == 401) {
+			_startHistory(true);
 			$('body').addClass('loaded');
 			router.navigate('login', {trigger: true});
 		} else if (error) {
+			_startHistory(true);
 			$('body').addClass('loaded');
 			ErrorUtil.show(error, router);
 		} else {
-			appModel.once("change", function(){
-				$('body').addClass('loaded');
-				router.navigate('dashboard', {trigger: true});
+			_startHistory();
+			appModel.once("sync:all", function(){
+				setTimeout(function(){
+					$('body').addClass('loaded');
+				}.bind(this), 1000)
 			});
-			appModel.fetch({});
 		}
 	});
 
-
-
+	function _startHistory(silent) {
+		// This needs go after things that subscribe to route
+		// events as it triggers the initial "route" on start()
+		Backbone.history.start({
+			root: '/server-remote-web/',
+			pushState: true,
+			silent: silent || false
+		});
+	}
 
 
 
@@ -118,7 +121,7 @@ require([
 
 	function _onResume() {
 		//indigoModel.fetch();
-		appModel.fetch();
+		//appModel.fetch();
 	}
 
 

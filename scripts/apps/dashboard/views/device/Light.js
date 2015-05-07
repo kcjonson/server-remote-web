@@ -39,25 +39,25 @@ define([
 			this._offNode.addEventListener("click", _.bind(this._onOffNodeClick, this));
 
 			// Touch Events
-			this.$el.on("touchstart", _.bind(this._onTouchStart, this));
-			this.$el.on("touchend", _.bind(this._onTouchEnd, this));
-			this.$el.on("touchcancel", _.bind(this._onTouchCancel, this));
-			this.$el.on("touchleave", _.bind(this._onTouchLeave, this));
-			this.$el.on("touchmove", _.bind(this._onTouchMove, this));
+			$(this._controlNode).on("touchstart", _.bind(this._onTouchStart, this));
+			$(this._controlNode).on("touchend", _.bind(this._onTouchEnd, this));
+			$(this._controlNode).on("touchcancel", _.bind(this._onTouchCancel, this));
+			$(this._controlNode).on("touchleave", _.bind(this._onTouchLeave, this));
+			$(this._controlNode).on("touchmove", _.bind(this._onTouchMove, this));
 		},
 
 
 	// Private Events
 
 		_onTouchStart: function(e) {
-			//console.log('_onTouchStart');
+			console.log('_onTouchStart');
 			this._touchInitialX = e.originalEvent.touches[0].pageX;
 			this._touchInitialY = e.originalEvent.touches[0].pageY;
 			this._takeMeasurements();
 		},
 
 		_onTouchEnd: function() {
-			//console.log('_onTouchEnd')
+			console.log('_onTouchEnd')
 			this._touchInitialX = null;
 			this._touchInitialY = null;
 			this._setBrightness(Math.round(this._knobPercent));
@@ -121,10 +121,12 @@ define([
 		},
 
 		_onOnNodeClick: function() {
+			console.log('_onOnNodeClick')
 			this._setBrightness(100);
 		},
 
 		_onOffNodeClick: function() {
+			console.log('_onOffNodeClick')
 			this._setBrightness(0);
 		},
 

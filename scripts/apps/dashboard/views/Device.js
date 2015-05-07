@@ -5,7 +5,8 @@ define([
 	'app/View',
 	'./device/Thermostat',
 	'./device/Light',
-	'text!./Device.html'
+	'text!./Device.html',
+	'app/util/Device'
 ], function(
 	$,
 	_,
@@ -13,10 +14,15 @@ define([
 	View,
 	Thermostat,
 	Light,
-	templateString
+	templateString,
+	DeviceUtil
 ){
 	
 	
+	var TYPE_TO_VIEW_MAP = {
+		INDIGO_DIMMER: Light,
+		NEST_THERMOSTAT: Thermostat
+	}
 	
 
 	return View.extend({
@@ -28,7 +34,8 @@ define([
 
 		initialize: function(args) {
 			this.appModel = args.appModel;
-			this.indigoModel = args.appModel.indigoModel;
+			//this.indigoModel = args.appModel.indigoModel;
+			this.devicesModel = args.appModel.devicesModel;
 			View.prototype.initialize.call(this);
 			//this.indigoModel.on("change", _.bind(this._onIndigoModelChange, this));
 		},
@@ -36,9 +43,10 @@ define([
 
 		show: function(params) {
 			View.prototype.show.call(this);
+			console.log(params);
 			if (params && params.length > 0) {
 				var id = params[0];
-				var model = this.indigoModel.get('devices').findWhere({id: id});
+				var model = this.devicesModel.findWhere({'_id': id});
 				if (model) {
 					this._displayDevice(model);
 				}
@@ -47,25 +55,17 @@ define([
 
 
 		_displayDevice: function(model) {
-			var category = model.get('category');
-			console.log('dm', model, category);
-			this._nameNode.innerHTML = model.get('name');
 
-			var detailsType;
-			switch(category) {
-				case 'thermostat':
-					detailsType = Thermostat;
-					break;
-				case 'light':
-					detailsType = Light;
-					$(this._typeNode).addClass('icon fa fa-lightbulb-o');
-					break;
-			}
+			this._nameNode.innerHTML = model.get('name');
+			var type = model.get('type');			
+			var iconClass = DeviceUtil.getIconFromType(type);
+			$(this._typeNode).addClass(iconClass);
+
 
 			if (this._detailsView) {
 				this._detailsView.remove();
 			}
-
+			var detailsType = TYPE_TO_VIEW_MAP[type];
 			if (detailsType) {
 				this._detailsView = new detailsType({
 					model: model

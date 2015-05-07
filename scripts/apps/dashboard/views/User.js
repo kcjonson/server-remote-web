@@ -53,7 +53,6 @@ define([
 	// Private Functions
 
 		_updateDisplay: function() {
-			console.log('cu', this.currentUserModel)
 			this._firstNameNode.value = this.currentUserModel.get('name').first;
 			this._lastNameNode.value = this.currentUserModel.get('name').last;
 			this._indigoUsernameNode.value = this.currentUserModel.get('accounts').indigo;

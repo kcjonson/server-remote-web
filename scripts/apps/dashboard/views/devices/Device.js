@@ -3,13 +3,15 @@ define([
 	'underscore',
 	'backbone',
 	'text!./Device.html',
-	'../Device'
+	'../Device',
+	'app/util/Device'
 ], function(
 	$,
 	_,
 	Backbone,
 	templateString,
-	Device
+	Device,
+	DeviceUtil
 ){
 
 
@@ -67,7 +69,7 @@ define([
 		},
 
 		_onNameNodeClick: function() {
-			var deviceId = this.model.get('id');
+			var deviceId = this.model.get('_id');
 			this.router.navigate('device/' + deviceId, {trigger: true});
 		},
 
@@ -103,11 +105,15 @@ define([
 
 		_updateDisplay: function () {
 			this._nameNode.innerHTML = this.model.get('name');
-			switch (this.model.get('category')) {
-				case "light":
+
+			var type = this.model.get('type');			
+			var iconClass = DeviceUtil.getIconFromType(type);
+			$(this._stateNode).addClass(iconClass);
+
+			switch (type) {
+				case "INDIGO_DIMMER":
 					//this._stateNode.innerHTML = this.model.get('displayLongState');
 					var currentBrightness = this.model.get('brightness');
-					$(this._stateNode).addClass('icon fa fa-lightbulb-o');
 					$(this._stateNode).toggleClass('on', currentBrightness > 0);
 
 					this._handleStateClick = function() {
@@ -118,13 +124,40 @@ define([
 						}, {patch: true});
 					}
 					break;
-				case 'thermostat':
-					var isOn = this.model.get('hvacHeaterIsOn');
-					$(this._stateNode).addClass('icon fa fa-fire');
-					$(this._stateNode).toggleClass('on', isOn);
+				case 'NEST_THERMOSTAT':
+					//console.log('Thermostat', this.model)
+					//var isOn = this.model.get('hvacHeaterIsOn');
+					//$(this._stateNode).toggleClass('on', isOn);
 					break;
-				case 'switch': 
-					$(this._stateNode).addClass('smaller icon fa fa-adjust');
+				case 'INDIGO_SWITCH': 
+					break;
+				case 'PORTHOLE_SPEAKER':
+					//console.log('Speaker', this.model)
+					break;
+				case 'ITUNES': 
+
+					var state = this.model.get('state');
+					$(this._stateNode).toggleClass('on', state == 'playing');
+
+					this._handleStateClick = function() {
+						var state = this.model.get('state');
+						var newState;
+						switch (state) {
+							case 'stopped':
+							case 'paused':
+								newState = 'playing';
+								break;
+							case 'playing':
+								newState = 'paused';
+								break;
+						}
+						if (newState) {
+							this.model.save({
+							 	state: newState
+							}, {patch: true});				
+						}
+					}
+
 					break;
 			}
 		}

@@ -22,7 +22,7 @@ define([
 
 		initialize: function(args) {
 			this.router = args.router;	
-			this.indigoModel = args.indigoModel;
+			//this.indigoModel = args.indigoModel;
 			this._initializeTemplate();
 
 			this.router.on("route", _.bind(function(route, params) {
@@ -77,15 +77,15 @@ define([
 
 	// Private Events
 
-		_onIndigoModelRequest: function (model, xhr, options) {
-			//console.log('app._onIndigoModelRequest()', model, xhr, options);
-			$(this._statusNode).removeClass('hidden');
-		},
+		// _onIndigoModelRequest: function (model, xhr, options) {
+		// 	//console.log('app._onIndigoModelRequest()', model, xhr, options);
+		// 	$(this._statusNode).removeClass('hidden');
+		// },
 
-		_onIndigoModelSync: function (model, response, options) {
-			//console.log('app._onIndigoModelRequest()', model, response, options);
-			$(this._statusNode).addClass('hidden');
-		},
+		// _onIndigoModelSync: function (model, response, options) {
+		// 	//console.log('app._onIndigoModelRequest()', model, response, options);
+		// 	$(this._statusNode).addClass('hidden');
+		// },
 
 		_onCurrentUserChange: function(model) {
 			//console.log('user change', model.get('name'), arguments)
