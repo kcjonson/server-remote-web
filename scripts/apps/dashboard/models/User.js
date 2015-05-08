@@ -2,15 +2,11 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'backbone-relational',
-	'app/models/checkins/Checkin',
-	'app/models/Checkins'
+	'backbone-relational'
 ], function(
 	$,
 	_,
-	Backbone,
-	Checkin,
-	Checkins
+	Backbone
 ){
 
 

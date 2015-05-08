@@ -9,8 +9,9 @@ define([
 ){
 	
 	return Backbone.Model.extend({
-		urlRoot: SERVER + 'api/users/',
+		urlRoot: SERVER + 'api/users',
 		idAttribute: '_id'
+
 	});
 
 });

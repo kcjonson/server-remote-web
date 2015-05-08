@@ -28,7 +28,8 @@ define([
 		fetchData: false,
 
 		initialize: function(args) {
-			this.router = args.router;			
+			this.router = args.router;
+			this.appModel = args.appModel;	
 			this._initializeTemplate();
 		},
 
@@ -70,6 +71,7 @@ define([
 	// Private Functions
 
 		_doSubmit: function() {
+			this._setDisabled(true)
 			var data = {
 				username: this._usernameNode.value,
 				password: this._passwordNode.value
@@ -84,21 +86,28 @@ define([
 		},
 
 		_onSuccess: function(userData) {
+			this._setDisabled(false)
 			//console.log('Login._onSuccess()');
 			CurrentUser.set(userData);
-			this.router.navigate('dashboard', {trigger: true})
-
-			// appModel.once("change", function(){
-			// 	router.navigate('dashboard', {trigger: true});
-			// });
-			// appModel.fetch({});
-
+			this.appModel.once("sync:all", function(){
+				setTimeout(function(){
+					this.router.navigate('dashboard', {trigger: true})
+				}.bind(this), 1000)
+			}.bind(this));
+			this.appModel.fetch({});
 
 		},
 
 		_onError: function(error) {
+			this._setDisabled(false)
 			//console.log('Login._onError()', error)
 			this._errorNode.innerHTML = error;
+		},
+
+		_setDisabled: function(disabled) {
+			$(this._usernameNode).prop('disabled', disabled);
+			$(this._passwordNode).prop('disabled', disabled);
+			$(this._submitNode).prop('disabled', disabled);
 		}
 
 

@@ -126,7 +126,7 @@ require([
 
 	function _onResume() {
 		//indigoModel.fetch();
-		//appModel.fetch();
+		appModel.fetch();
 	}
 
 

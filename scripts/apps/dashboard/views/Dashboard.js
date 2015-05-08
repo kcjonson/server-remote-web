@@ -15,59 +15,6 @@ define([
 ){
 	
 
-
-	var QUICK_ACTIONS = [
-		{
-			name: 'Turn Off Everything',
-			condition: function(conditions) {
-				return conditions.numLightsOn > 0;
-			}
-		},
-		{
-			name: 'Turn On All Lights',
-			condition: function(conditions) {
-				return conditions.numLightsOn !== conditions.numLights;
-			}
-		},
-		{
-			name: 'Set Movie Mood',
-			condition: function(conditions) {
-				// TODO: Motion Detected in tv room recently
-				return true;
-			}
-		},
-		{
-			name: 'Set Bedtime Mood',
-			condition: function(conditions) {
-				// Todo: Motion detected in bedroom recently (need to install hardware)
-				return new Date().getHours() > 17;
-			}
-		},
-		{
-			name: 'Play KEXP',
-			condition: function(conditions) {
-				return conditions.iTunesIsPlaying == false;
-			}
-		},
-		{
-			name: 'Pause Music',
-			condition: function(conditions) {
-				return conditions.iTunesIsPlaying == true;
-			}
-		},
-		{
-			name: 'Turn On Outside Lights',
-			condition: function(conditions) {
-				return conditions.isDaylight == false && conditions.numOutsideLightsOn < conditions.numOutsideLights;
-			}
-		},
-		{
-			name: 'Turn Off Outside Lights',
-			condition: function(conditions) {
-				return conditions.numOutsideLightsOn > 0;
-			}
-		}
-	];
 	
 	
 
@@ -78,23 +25,31 @@ define([
 		name: 'Dashboard',
 		fetchData: true,
 		_userViews: {},
+		_actionViews: {},
 
 		initialize: function(args) {
 			this.appModel = args.appModel;
-			this.indigoModel = this.appModel.indigoModel;
 			this.alarmsModel = this.appModel.alarmsModel;
 			this.usersModel = this.appModel.usersModel;
 			this.devicesModel = this.appModel.devicesModel;
+			this.actionsModel = this.appModel.actionsModel;
 			this.router = args.router;
 			
 			this._initializeTemplate();
 			this._alarmTimeNode.addEventListener("click", _.bind(this._onAlarmTimeClick, this));
 			this._alarmStatusNode.addEventListener("click", _.bind(this._onAlarmStatusClick, this));
 
-			this.indigoModel.on('change', _.bind(this._onIndigoModelChange, this));
 			this.alarmsModel.on('change add remove reset sort destroy', this._onAlarmsModelChange.bind(this));
-			this.usersModel.on('change add remove reset sort destroy', _.bind(this._onUsersModelChange, this));
-			this.devicesModel.on('all', _.bind(this._onDevicesModelAll, this));
+
+			this._addUsers();
+			this.usersModel.on('add', _.bind(this._onUsersModelAdd, this));
+
+			this._updateDevicesDisplay();
+			this.devicesModel.on('change', _.bind(this._onDevicesModelChange, this));
+			this.devicesModel.on('add', _.bind(this._onDevicesModelAdd, this));
+
+			this._addActions();
+			this.actionsModel.on('add', _.bind(this._onActionsModelAdd, this));
 		},
 
 		
@@ -124,7 +79,7 @@ define([
 
 		show: function() {
 			//console.log('show')
-			this._updateDisplay();
+			//this._updateDisplay();
 			this.$el.removeClass('hidden');
 		},
 
@@ -158,22 +113,24 @@ define([
 		
 	// Data Event Handlers
 
-		_onIndigoModelChange: function(model) {
-			//console.log('IndigoModel:change', model);
-			this._updateDisplay();
-		},
-
 		_onAlarmsModelChange: function() {
 			this._updateAlarmsDisplay();
 		},
 
-		_onUsersModelChange: function() {
-			//console.log('UsersModel:change', model);
-			this._updateUsersDisplay();
+		_onUsersModelAdd: function(userModel) {
+			this._addUser(userModel);
 		},
 
-		_onDevicesModelAll: function() {
-			console.log('all')
+		_onDevicesModelAdd: function() {
+			this._updateDevicesDisplay();
+		},
+
+		_onDevicesModelChange: function() {
+			this._updateDevicesDisplay();
+		},
+
+		_onActionsModelAdd: function(actionModel) {
+			this._addAction(actionModel);
 		},
 
 
@@ -181,26 +138,36 @@ define([
 
 	// Private
 
-		_updateUsersDisplay: function() {
-			if (this._userViews) {
-				for (property in this._userViews) {
-					if (this._userViews.hasOwnProperty(property)) {
-				        var userView = this._userViews[property];
-				        var userId = userView.userModel.get('_id');
-				        if (!this.usersModel.findWhere({'_id': userId})) {
-				        	userView.remove();
-				        	delete this._userViews[property]
-				        }
-				    }
-				}
-			}
-			this.usersModel.forEach(function(userModel){
-				var userId = userModel.get('_id');
-				if (!this._userViews[userId]) {
-					this._userViews[userId] = new User({userModel: userModel}).placeAt(this._usersNode);
-				}
-			}.bind(this));
+
+		// Actions
+
+		_addActions: function() {
+			this.actionsModel.forEach(this._addAction.bind(this));
 		},
+
+		_addAction: function(actionModel) {
+			this._actionViews[actionModel.get('_id')] = new Action({
+				model: actionModel
+			}).placeAt(this._actionsNode);
+		},
+
+
+
+		// Users
+
+		_addUsers: function() {
+			this.usersModel.forEach(this._addUser.bind(this));
+		},
+
+		_addUser: function(userModel) {
+			this._userViews[userModel.get('_id')] = new User({
+				userModel: userModel
+			}).placeAt(this._usersNode);
+		},
+
+
+
+		// Alarms
 
 		_updateAlarmsDisplay: function() {
 			var alarmModel = this.alarmsModel.at(0);
@@ -222,14 +189,17 @@ define([
 			}
 		},
 
-		_updateDisplay: function() {
-			console.log('Update Display', this.devicesModel);
 
+
+		// Devices
+
+		_updateDevicesDisplay: function() {
+			//console.log('Update Display', this.devicesModel);
 
 			var numLights = this.devicesModel.where({type: "INDIGO_DIMMER"}).length;
 
 			var numLightsOn = this.devicesModel.filter(function(deviceModel){
-				return deviceModel.get('type') === 'INDIGO_DIMMER' 
+				return deviceModel.get('type') === 'INDIGO_DIMMER'
 				&& deviceModel.get('brightness') > 0;
 			}).length;
 
@@ -244,60 +214,19 @@ define([
 					&& deviceModel.get('name').indexOf('Outside') > -1;
 			}).length;
 
+			this._numLightsOnNode.innerHTML = numLightsOn;
 
 			// TODO
 			var numThermostatsOn = 0;
-
-
-			this._numLightsOnNode.innerHTML = numLightsOn;
+			
 			if (numThermostatsOn > 0) {
 				this._thermostatsStatusNode.innerHTML = 'On'
 			} else {
 				this._thermostatsStatusNode.innerHTML = 'Off'
 			}
 
-			//var iTunesDevice = devicesCollection.findWhere({name: 'iTunes'});
-			this._createActions({
-				numLights: numLights,
-				numLightsOn: numLightsOn,
-				numOutsideLights: numOutsideLights,
-				numOutsideLightsOn: numOutsideLightsOn,
-				isDaylight: this._getVariable('isDaylight')
-				//iTunesIsPlaying: iTunesDevice && iTunesDevice.get('displayRawState') == 'playing'
-			});
-		},
-
-		_getVariable: function(variableName) {
-			if (this.indigoModel) {
-				var variables = this.indigoModel.get('variables');
-				if (variables) {
-					var variable = variables.findWhere({name: variableName});
-					if (variable) {
-						return variable.get('value');
-					}
-				}
-			}
-		},
-
-		_createActions: function(conditions) {
-			//console.log('_createActions');
-			var actionsCollection = this.indigoModel.get('actions');
-			QUICK_ACTIONS.forEach(function(action, index){
-				isVisible = action.condition(conditions)
-				if (isVisible && !action.view && index < 10) {
-					var actionModel = actionsCollection.findWhere({name: action.name})
-					//console.log(actionsCollection, action.name, actionModel);
-					if (actionModel) {
-						action.view = new Action({
-							model: actionModel
-						}).placeAt(this._actionsNode);
-					}
-				} else if (action.view && !isVisible) {
-					action.view.remove();
-					action.view = undefined;
-				}
-			}, this);
 		}
+
 
 	});
 

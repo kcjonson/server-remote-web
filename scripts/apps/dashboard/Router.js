@@ -87,7 +87,6 @@ define([
 							} else {
 								args.appModel.pollingEnabled = false;
 							}
-							
 							this.el.toggleClass('dark', v.darkBackground === true)
 							v.show(params);
 						}

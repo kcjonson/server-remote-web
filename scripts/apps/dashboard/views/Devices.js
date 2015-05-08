@@ -36,18 +36,22 @@ define([
 		attributes: {
 			'class': 'scrollable'
 		},
+		_categoryViews: {},
 
 		initialize: function(args) {
 
 			console.log('Devices Initialize')
+
 			this._initializeTemplate();
 			this.router = args.router;
 			this.appModel = args.appModel;
 			this.devicesModel = args.appModel.devicesModel;
 
-			this._populateDevicesList();
+			this._addDevices();
 
-			this.devicesModel.on("add remove reset sort destroy", _.bind(this._onDevicesModelChange, this));
+			this.devicesModel.on("add", _.bind(this._onDevicesModelAdd, this));
+			this.devicesModel.on("remove", _.bind(this._onDevicesModelRemove, this));
+
 			$(this._typeInput).on("change", _.bind(this._onGroupingChange, this));
 			$(this._locationInput).on("change", _.bind(this._onGroupingChange, this));
 		},
@@ -72,6 +76,9 @@ define([
 			
 		},
 
+
+	// Public
+
 		show: function() {
 			this.$el.removeClass('hidden');
 		},
@@ -80,58 +87,65 @@ define([
 			this.$el.addClass('hidden');
 		},
 
-		_onDevicesModelChange: function() {
-			//console.log('_onDevicesModelChange');
-			this._populateDevicesList();
+
+	// Events
+
+		_onDevicesModelAdd: function(deviceModel) {
+			//console.log('_onDevicesModelAdd', arguments);
+			this._addDevice(deviceModel);
+		},
+
+		_onDevicesModelRemove: function(deviceModel) {
+			//console.log('_onDevicesModelRemove');
+			this._reset();
+			this._addDevices();
 		},
 
 		_onGroupingChange: function() {
-			this._populateDevicesList();
+			this._reset();
+			this._addDevices();
 		},
 
-		_populateDevicesList: function() {
-			if (this.devicesModel) {
 
-				// Remove Old Categories
-				for (var key in this._categoryViews) {
-					if (this._categoryViews.hasOwnProperty(key)) {
-						this._categoryViews[key].remove();
-					}
-				}
-				this._categoryViews = {};
 
-				var listFragment = document.createDocumentFragment();
+	// Private Functions
 
-				// Read Current Grouping
-				var grouping = $("input:radio[name=devicesGrouping]:checked").val();
 
-				this.devicesModel.forEach(function(deviceModel){
-					var category;
-					switch (grouping) {
-						case 'type':
-							category = deviceModel.get('displayType');
-							break;
-						case 'location':
-						default:
-							category = deviceModel.get('location') || this._getLocationFromName(deviceModel.get('name'));
-							break;							
-					}
-					if (category !== 'Unknown') {
-						if (!this._categoryViews[category]) {
-							this._categoryViews[category] = new Category({
-								title: category,
-								router: this.router
-							}).placeAt(listFragment);
-						};
-						this._categoryViews[category].addDevice(deviceModel);
-					};
-				}.bind(this));
+		_addDevices: function() {
+			this.devicesModel.forEach(this._addDevice.bind(this));
+		},
 
-				this._categoriesNode.appendChild(listFragment);
+		_addDevice: function(deviceModel) {
+			var grouping = $("input:radio[name=devicesGrouping]:checked").val();
+			var category;
+			switch (grouping) {
+				case 'type':
+					category = deviceModel.get('displayType');
+					break;
+				case 'location':
+				default:
+					category = deviceModel.get('location') || this._getLocationFromName(deviceModel.get('name'));
+					break;							
 			}
+			if (category !== 'Unknown') {
+				if (!this._categoryViews[category]) {
+					this._categoryViews[category] = new Category({
+						title: category,
+						router: this.router
+					}).placeAt(this._categoriesNode);
+				};
+				this._categoryViews[category].addDevice(deviceModel);
+			};
 		},
 
-
+		_reset: function() {
+			for (var key in this._categoryViews) {
+				if (this._categoryViews.hasOwnProperty(key)) {
+					this._categoryViews[key].remove();
+				}
+			}
+			this._categoryViews = {};
+		},
 
 		_getLocationFromName: function(name) {
 			var location = 'Unknown';

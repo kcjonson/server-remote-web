@@ -9,13 +9,12 @@ define([
 	Backbone,
 	UserModel
 ){
-	
-	return Backbone.Collection.extend({
 
+	return Backbone.Collection.extend({
 		url: function() {
 			return SERVER + 'api/users'
 		},
-		models: UserModel
+		model: UserModel
 	
 	});
 

@@ -5,7 +5,8 @@ define([
 	'app/models/Indigo',
 	'app/models/Alarms',
 	'app/models/Devices',
-	'app/models/Users'
+	'app/models/Users',
+	'app/models/Actions'
 ], function(
 	$,
 	_,
@@ -13,7 +14,8 @@ define([
 	IndigoModel,
 	AlarmsModel,
 	DevicesModel,
-	UsersModel
+	UsersModel,
+	ActionsModel
 ){
 
 
@@ -26,6 +28,9 @@ define([
 
 
 		initialize: function () {
+
+
+
 			console.log('/models/App.initialize()')
 			this.indigoModel = new IndigoModel({id: '1'});
 			this.indigoModel.on("all", this._onModelAll.bind(this));
@@ -38,6 +43,9 @@ define([
 
 			this.usersModel = new UsersModel();
 			this.usersModel.on("all", this._onModelAll.bind(this));
+
+			this.actionsModel = new ActionsModel();
+			this.actionsModel.on("all", this._onModelAll.bind(this));
 		},
 
 		fetch: function(args) {
@@ -47,7 +55,8 @@ define([
 				this.alarmsModel.fetch(args),
 				this.indigoModel.fetch(args),
 				this.devicesModel.fetch(args),
-				this.usersModel.fetch(args)
+				this.usersModel.fetch(args),
+				this.actionsModel.fetch(args)
 			).done(function(){
 				this.trigger('sync:all');
 			}.bind(this));
