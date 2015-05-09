@@ -28,7 +28,6 @@ define([
 				source.onmessage = function(e) { 
 					if (e.data) {
 						var newData = JSON.parse(e.data);
-						console.log(newData);
 						this.set([newData], {remove: false})
 					}
 			    }.bind(this);

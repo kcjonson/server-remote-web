@@ -133,6 +133,22 @@ define([
 						title: category,
 						router: this.router
 					}).placeAt(this._categoriesNode);
+
+					var categories = $('.categories > .Category', this.$el);
+					categories.sort(function(a,b){
+						var an = a.getAttribute('data-name'),
+							bn = b.getAttribute('data-name');
+						if(an > bn) {
+							return 1;
+						}
+						if(an < bn) {
+							return -1;
+						}
+						return 0;
+					});
+					categories.detach().appendTo(this._categoriesNode);
+
+
 				};
 				this._categoryViews[category].addDevice(deviceModel);
 			};

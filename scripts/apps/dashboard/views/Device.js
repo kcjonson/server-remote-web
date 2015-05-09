@@ -5,6 +5,7 @@ define([
 	'app/View',
 	'./device/Thermostat',
 	'./device/Light',
+	'./device/Speaker',
 	'text!./Device.html',
 	'app/util/Device'
 ], function(
@@ -14,6 +15,7 @@ define([
 	View,
 	Thermostat,
 	Light,
+	Speaker,
 	templateString,
 	DeviceUtil
 ){
@@ -21,7 +23,8 @@ define([
 	
 	var TYPE_TO_VIEW_MAP = {
 		INDIGO_DIMMER: Light,
-		NEST_THERMOSTAT: Thermostat
+		NEST_THERMOSTAT: Thermostat,
+		AIRFOIL_SPEAKER: Speaker
 	}
 	
 

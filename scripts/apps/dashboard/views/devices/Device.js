@@ -104,8 +104,7 @@ define([
 	// Private Functions
 
 		_updateDisplay: function () {
-
-			console.log('update')
+			this.$el.attr('data-name', this.model.get('name'))
 
 			this._nameNode.innerHTML = this.model.get('name');
 
@@ -145,7 +144,7 @@ define([
 						var connected = this.model.get('connected') == 'true';
 						if (connected) {
 							this.model.save({
-							 	volume: isOn ? 0 : 80
+							 	volume: isOn ? 0 : 60
 							}, {patch: true});
 						} else {
 							this.model.save({
