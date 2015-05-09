@@ -14,7 +14,7 @@ define([], function(){
 				case 'INDIGO_SWITCH': 
 					icon = 'smaller icon fa fa-adjust';
 					break;
-				case 'PORTHOLE_SPEAKER':
+				case 'AIRFOIL_SPEAKER':
 					icon = 'icon fa fa-volume-up'
 					break;
 				case 'INDIGO_MOTION_DETECTOR':

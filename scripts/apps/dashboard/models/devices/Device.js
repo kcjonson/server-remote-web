@@ -35,7 +35,7 @@ define([
 				case 'NEST_THERMOSTAT':
 					displayType = 'Thermostat'
 					break;
-				case 'PORTHOLE_SPEAKER':
+				case 'AIRFOIL_SPEAKER':
 					displayType = 'Speaker'
 					break;
 				case 'ITUNES':

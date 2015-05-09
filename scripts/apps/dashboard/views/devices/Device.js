@@ -104,6 +104,9 @@ define([
 	// Private Functions
 
 		_updateDisplay: function () {
+
+			console.log('update')
+
 			this._nameNode.innerHTML = this.model.get('name');
 
 			var type = this.model.get('type');			
@@ -131,8 +134,26 @@ define([
 					break;
 				case 'INDIGO_SWITCH': 
 					break;
-				case 'PORTHOLE_SPEAKER':
-					//console.log('Speaker', this.model)
+				case 'AIRFOIL_SPEAKER':
+					var volume = this.model.get('volume');
+					var connected = this.model.get('connected') == 'true';
+					$(this._stateNode).toggleClass('on', volume > 0 && connected);
+
+					this._handleStateClick = function() {
+						var volume = this.model.get('volume');
+						var isOn = volume > 0;
+						var connected = this.model.get('connected') == 'true';
+						if (connected) {
+							this.model.save({
+							 	volume: isOn ? 0 : 80
+							}, {patch: true});
+						} else {
+							this.model.save({
+							 	volume: volume
+							}, {patch: true});
+						}
+					}.bind(this);
+
 					break;
 				case 'ITUNES': 
 

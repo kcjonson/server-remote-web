@@ -10,32 +10,6 @@
 	.control {
 		position: relative;
 
-		svg {
-			width: 90vw;
-			margin-left: 5vw;
-
-			.gauge-fill-area {
-				// -webkit-transition: -webkit-transform 2s;
-	  		 	// transition: transform 2s;
-				transform: rotate(-270deg);
-				-webkit-transform-origin-x: 250px;
-				-webkit-transform-origin-y: 250px;
-				fill: #FFC83C;
-			}
-
-			.knob-group {
-				transform: rotate(-270deg);
-				-webkit-transform-origin-x: 250px;
-				-webkit-transform-origin-y: 250px;
-				.knob {
-					fill: #eee;
-				}
-				.handle {
-					fill: #eee;
-				}
-			}
-		}
-
 		.labels {
 			position: absolute;
 			top: 46%;
@@ -50,32 +24,11 @@
 				margin-left: -50%;
 				text-align: center;
 				margin-top: -.3em;
-				font-size: 4em;
-				font-weight: lighter;
-				color: #8D8D8D;
+
 			}
 		}
 
-		.origin,
-		.destination {
-			position: absolute;
-			width: 20px;
-			margin-top: -10px;
-			height: 20px;
-			margin-left: -10px;
-			border-radius: 20px;
-			color: #fff;
-			text-align: center;
-			font-size: 10px;
-		}
-
-		.origin {
-			background-color: red;
-		}
-
-		.destination {
-			background-color: blue;
-		}
+		
 
 	}
 
