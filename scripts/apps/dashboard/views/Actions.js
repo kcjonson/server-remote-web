@@ -20,20 +20,19 @@ define([
 
 	// Init
 		name: 'Actions',
-		fetchData: false,
+		fetchData: true,
 		attributes: {
 			'class': 'scrollable'
 		},
 
 		initialize: function (args) {			
 			this._initializeTemplate();
-			//this._initializeModel();
-			//this._createActions();
 
 			this.appModel = args.appModel;
-			this.indigoModel = args.appModel.indigoModel;
-			this.indigoModel.on("change", _.bind(this._onIndigoModelChange, this));
-			this._populateActionsList();
+			this.actionsModel = args.appModel.actionsModel;
+			this._addActions();
+			this.actionsModel.on("add", _.bind(this._onActionsModelAdd, this));
+			this.actionsModel.on("remove", _.bind(this._onActionsModelRemove, this));
 		},
 
 		
@@ -64,21 +63,29 @@ define([
 			this.$el.addClass('hidden');
 		},
 
-		_onIndigoModelChange: function() {
-			console.log('Actions._onIndigoModelChange()', this.indigoModel);
-			this._populateActionsList();
+
+		_onActionsModelAdd: function(actionModel) {
+			this._addAction(actionModel);
 		},
 
-		_populateActionsList: function (argument) {
-			if (this.indigoModel) {
-				var actionsCollection = this.indigoModel.get('actions');
-				actionsCollection.forEach(function (actionModel) {
-					var actionView = new Action({
-						model: actionModel
-					}).placeAt(this._actionsNode);
-				}, this);
-			}
+		_onActionsModelRemove: function() {
+
+		},
+
+		_addActions: function() {
+			this.actionsModel.forEach(this._addAction.bind(this));
+		},
+
+		_addAction: function(actionModel) {
+			var actionView = new Action({
+				model: actionModel
+			}).placeAt(this._actionsNode);
 		}
+
+
+
+
+
 
 
 		

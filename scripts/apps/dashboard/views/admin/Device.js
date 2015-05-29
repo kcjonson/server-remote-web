@@ -27,7 +27,9 @@ define([
 			this.model.on("change", _.bind(this._onModelChange, this));
 			this._updateDisplay();
 
-			this._categoryNode.addEventListener('change', this._onCategoryChange.bind(this));
+			this._categoryNode.addEventListener('change', this._onFieldChange.bind(this));
+			this._nameNode.addEventListener('change', this._onFieldChange.bind(this));
+			this._locationNode.addEventListener('change', this._onFieldChange.bind(this));
 		},
 
 		_initializeTemplate: function () {
@@ -57,8 +59,10 @@ define([
 			this._updateDisplay();
 		},
 
-		_onCategoryChange: function(e) {
-			console.log(e.target.value)
+		_onFieldChange: function(e) {
+			var payload = {};
+			payload[e.target.dataset.field] = e.target.value;
+			this.model.save(payload, {patch: true});
 		},
 
 
@@ -69,7 +73,9 @@ define([
 		_updateDisplay: function () {
 			this.$el.attr('data-name', this.model.get('name'))
 
-			this._nameNode.value = this.model.get('name');
+			this._nameNode.value = this.model.get('name') || '';
+			this._categoryNode.value = this.model.get('category') || '';
+			this._locationNode.value = this.model.get('location') || '';
 			this._idNode.innerHTML = this.model.get('_id');
 			this._typeNode.innerHTML = this.model.get('type');
 

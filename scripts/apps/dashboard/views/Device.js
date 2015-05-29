@@ -37,10 +37,8 @@ define([
 
 		initialize: function(args) {
 			this.appModel = args.appModel;
-			//this.indigoModel = args.appModel.indigoModel;
 			this.devicesModel = args.appModel.devicesModel;
 			View.prototype.initialize.call(this);
-			//this.indigoModel.on("change", _.bind(this._onIndigoModelChange, this));
 		},
 
 

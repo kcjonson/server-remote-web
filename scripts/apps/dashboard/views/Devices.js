@@ -13,21 +13,6 @@ define([
 ){
 
 
-	var NAME_TO_LOCATIONS_MAP = {
-		'Master Bathroom': 'Upstairs',
-		'Master Bedroom': 'Upstairs',
-		'Upstairs': 'Upstairs',
-		'Kitchen': 'Main Floor',
-		'Living Room': 'Main Floor',
-		'Pantry': 'Main Floor',
-		'Office': 'Downstairs',
-		'TV Room': 'Downstairs',
-		'Entry': 'Downstairs',
-		'Downstairs': 'Downstairs',
-		'Outside': 'Outside',
-		'iTunes': 'Everywhere'
-	};
-
 	return Backbone.View.extend({
 
 
@@ -118,11 +103,11 @@ define([
 			var category;
 			switch (grouping) {
 				case 'type':
-					category = deviceModel.get('displayType');
+					category = deviceModel.get('category');
 					break;
 				case 'location':
 				default:
-					category = deviceModel.get('location') || this._getLocationFromName(deviceModel.get('name'));
+					category = deviceModel.get('location') || 'Unknown'
 					break;							
 			}
 			if (category !== 'Unknown') {
@@ -159,18 +144,7 @@ define([
 				}
 			}
 			this._categoryViews = {};
-		},
-
-		_getLocationFromName: function(name) {
-			var location = 'Unknown';
-			for (var key in NAME_TO_LOCATIONS_MAP) {
-				if (name.indexOf(key) > -1) {
-					location = NAME_TO_LOCATIONS_MAP[key];
-				}
-			}
-			return location;
 		}
-
 
 		
 	});

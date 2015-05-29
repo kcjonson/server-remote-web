@@ -2,7 +2,6 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'app/models/Indigo',
 	'app/models/Alarms',
 	'app/models/Devices',
 	'app/models/Users',
@@ -11,7 +10,6 @@ define([
 	$,
 	_,
 	Backbone,
-	IndigoModel,
 	AlarmsModel,
 	DevicesModel,
 	UsersModel,
@@ -32,8 +30,6 @@ define([
 
 
 			console.log('/models/App.initialize()')
-			this.indigoModel = new IndigoModel({id: '1'});
-			this.indigoModel.on("all", this._onModelAll.bind(this));
 
 			this.alarmsModel = new AlarmsModel({id: '1'});
 			this.alarmsModel.on("all", this._onModelAll.bind(this));
@@ -53,7 +49,6 @@ define([
 
 			$.when(
 				this.alarmsModel.fetch(args),
-				this.indigoModel.fetch(args),
 				this.devicesModel.fetch(args),
 				this.usersModel.fetch(args),
 				this.actionsModel.fetch(args)

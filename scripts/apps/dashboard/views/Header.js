@@ -22,7 +22,6 @@ define([
 
 		initialize: function(args) {
 			this.router = args.router;	
-			//this.indigoModel = args.indigoModel;
 			this._initializeTemplate();
 
 			this.router.on("route", _.bind(function(route, params) {
@@ -31,9 +30,6 @@ define([
 
 			this.router.on('show:header', this.show.bind(this));
 			this.router.on('hide:header', this.hide.bind(this));
-
-			// this.indigoModel.on("request", _.bind(this._onIndigoModelRequest, this));
-			// this.indigoModel.on("sync", _.bind(this._onIndigoModelSync, this));
 
 			this._userNode.addEventListener('click', this._onUserNodeClick.bind(this));
 
@@ -76,16 +72,6 @@ define([
 
 
 	// Private Events
-
-		// _onIndigoModelRequest: function (model, xhr, options) {
-		// 	//console.log('app._onIndigoModelRequest()', model, xhr, options);
-		// 	$(this._statusNode).removeClass('hidden');
-		// },
-
-		// _onIndigoModelSync: function (model, response, options) {
-		// 	//console.log('app._onIndigoModelRequest()', model, response, options);
-		// 	$(this._statusNode).addClass('hidden');
-		// },
 
 		_onCurrentUserChange: function(model) {
 			//console.log('user change', model.get('name'), arguments)
