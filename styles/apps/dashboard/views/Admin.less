@@ -1,0 +1,29 @@
+
+	.Admin {
+		-webkit-user-select: text;
+		user-select: text;
+
+		.table {
+			display: table;
+			width: 100%;
+
+			> * {
+				display: table-row;
+				&:not(:last-child) > * {
+					padding-bottom: 1rem;
+				}
+
+				> * {
+					display: table-cell;
+					&:not(:last-child) {
+						padding-right: .5rem;
+					}
+				}
+			}
+		}
+
+		input {
+			width: 100%;
+		}
+
+	}

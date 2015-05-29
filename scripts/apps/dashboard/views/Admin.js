@@ -2,12 +2,14 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'text!./Admin.html'
+	'text!./Admin.html',
+	'./admin/Device'
 ], function(
 	$,
 	_,
 	Backbone,
-	templateString
+	templateString,
+	Device
 ){
 	
 
@@ -20,12 +22,18 @@ define([
 	// Init
 
 		name: 'Admin',
+		fetchData: true,
 
 		initialize: function(args) {
 			this.router = args.router;
-			
+			this.appModel = args.appModel;
+			this.devicesModel = args.appModel.devicesModel;
 			this._initializeTemplate();
 
+			this._addDevices();
+
+			this.devicesModel.on("add", _.bind(this._onDevicesModelAdd, this));
+			this.devicesModel.on("remove", _.bind(this._onDevicesModelRemove, this));
 		},
 
 		
@@ -59,8 +67,33 @@ define([
 			this.$el.addClass('hidden');
 		},
 
-	});
 
+
+	// Event Handlers
+
+		_onDevicesModelAdd: function(deviceModel) {
+			this._addDevice(deviceModel);
+		},
+
+		_onDevicesModelRemove: function() {
+
+		},
+
+
+	// Private Functions
+
+		_addDevices: function() {
+			this.devicesModel.forEach(this._addDevice.bind(this));
+		},
+
+		_addDevice: function(deviceModel) {
+			new Device({
+				model: deviceModel,
+				router: this.router
+			}).placeAt(this._devicesNode);
+		}
+
+	});
 	
 });
 		

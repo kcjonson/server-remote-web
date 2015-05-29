@@ -24,7 +24,8 @@ define([
 		'TV Room': 'Downstairs',
 		'Entry': 'Downstairs',
 		'Downstairs': 'Downstairs',
-		'Outside': 'Outside'
+		'Outside': 'Outside',
+		'iTunes': 'Everywhere'
 	};
 
 	return Backbone.View.extend({
@@ -39,9 +40,6 @@ define([
 		_categoryViews: {},
 
 		initialize: function(args) {
-
-			console.log('Devices Initialize')
-
 			this._initializeTemplate();
 			this.router = args.router;
 			this.appModel = args.appModel;

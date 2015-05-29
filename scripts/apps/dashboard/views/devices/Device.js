@@ -107,6 +107,8 @@ define([
 			this.$el.attr('data-name', this.model.get('name'))
 
 			this._nameNode.innerHTML = this.model.get('name');
+			this._idNode.innerHTML = this.model.get('_id');
+			this._typeNode.innerHTML = this.model.get('type');
 
 			var type = this.model.get('type');			
 			var iconClass = DeviceUtil.getIconFromType(type);
