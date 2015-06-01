@@ -8,6 +8,8 @@ define([
 	'app/views/Alarm',
 	'app/views/Device',
 	'app/views/Admin',
+	'app/views/admin/Devices',
+	'app/views/admin/Actions',
 	'app/views/Login',
 	'app/views/Error',
 	'app/views/User'
@@ -21,6 +23,8 @@ define([
 	Alarm,
 	Device,
 	Admin,
+	AdminDevices,
+	AdminActions,
 	Login,
 	Error,
 	User
@@ -39,6 +43,8 @@ define([
 			'actions': 'Actions',
 			'alarm': 'Alarm',
 			'admin': 'Admin',
+			'admin/devices': 'AdminDevices',
+			'admin/actions': 'AdminActions',
 			'login': 'Login',
 			'error': 'Error',
 			'user': 'User',

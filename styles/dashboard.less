@@ -11,12 +11,6 @@
 @import url('./apps/dashboard/views/User.less');
 
 
-	@base-color: rgb(44, 42, 42);
-	@highlight-color: #45C7EC;
-	@color-positive: #96CA2D;
-
-
-
 
 	body.dashboard {
 
@@ -87,6 +81,12 @@
 			&.dark {
 				color: #fff;
 			}
+
+			@media (min-width: @screen-large) {
+				position: absolute;
+				left: 20vw;
+				width: 80vw;
+			}
 		}
 
 		> .footer {
@@ -95,6 +95,13 @@
 			width: 100vw;
 			background-color: lighten(@base-color, 10%);
 			color: #fff;
+
+			@media (min-width: @screen-large) {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 20vw;
+			}
 		}
 
 		@-webkit-keyframes PULSE {

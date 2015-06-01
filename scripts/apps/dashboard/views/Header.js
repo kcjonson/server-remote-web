@@ -25,7 +25,7 @@ define([
 			this._initializeTemplate();
 
 			this.router.on("route", _.bind(function(route, params) {
-			    this._titleNode.innerHTML = route; 
+			    this._titleNode.innerHTML = route;
 			}, this));
 
 			this.router.on('show:header', this.show.bind(this));

@@ -36,7 +36,6 @@ require([
 	ErrorUtil
 ){
 
-
 	var isCordova = !!window.cordova;
 
 
@@ -56,10 +55,8 @@ require([
 // Startup
 
 
-
+	$.ajaxSetup({timeout:10000});
 	var appModel = new AppModel();
-
-
 
 	// Set Up Router & Start History
 	router = new Router({
@@ -80,8 +77,6 @@ require([
 
 
 
-
-
 	CurrentUser.authenticate(function(error){
 		if (error && error.status == 401) {
 			_startHistory(true);
@@ -95,7 +90,7 @@ require([
 			appModel.once("sync:all", function(){
 				setTimeout(function(){
 					$('body').addClass('loaded');
-				}.bind(this), 1000)
+				}.bind(this), 100)
 			});
 			_startHistory();
 		}

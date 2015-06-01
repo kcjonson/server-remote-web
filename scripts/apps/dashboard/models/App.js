@@ -5,7 +5,8 @@ define([
 	'app/models/Alarms',
 	'app/models/Devices',
 	'app/models/Users',
-	'app/models/Actions'
+	'app/models/Actions',
+	'app/models/Settings'
 ], function(
 	$,
 	_,
@@ -13,7 +14,8 @@ define([
 	AlarmsModel,
 	DevicesModel,
 	UsersModel,
-	ActionsModel
+	ActionsModel,
+	SettingsModel
 ){
 
 
@@ -26,8 +28,6 @@ define([
 
 
 		initialize: function () {
-
-
 
 			console.log('/models/App.initialize()')
 
@@ -42,6 +42,9 @@ define([
 
 			this.actionsModel = new ActionsModel();
 			this.actionsModel.on("all", this._onModelAll.bind(this));
+
+			this.settingsModel = new SettingsModel();
+			this.settingsModel.on("all", this._onModelAll.bind(this));
 		},
 
 		fetch: function(args) {
@@ -51,7 +54,8 @@ define([
 				this.alarmsModel.fetch(args),
 				this.devicesModel.fetch(args),
 				this.usersModel.fetch(args),
-				this.actionsModel.fetch(args)
+				this.actionsModel.fetch(args),
+				this.settingsModel.fetch(args)
 			).done(function(){
 				this.trigger('sync:all');
 			}.bind(this));

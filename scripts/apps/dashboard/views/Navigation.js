@@ -2,12 +2,14 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'text!./Navigation.html'
+	'text!./Navigation.html',
+	'app/util/Detect'
 ], function(
 	$,
 	_,
 	Backbone,
-	templateString
+	templateString,
+	Detect
 ){
 
 
@@ -17,6 +19,7 @@ define([
 	// Init
 		name: 'Navigation',
 		shown: true,
+		tagName: "ol",
 
 		initialize: function(args) {
 			this._options = {}; // Store node refs for nav options.
@@ -73,13 +76,27 @@ define([
 				$('[data-route]', this.$el).each(_.bind(function(index, routeNode){
 					var route = routeNode.attributes['data-route'].value;
 					this._options[route] = routeNode;
-					routeNode.addEventListener("click", _.bind(this._onRouteClick, this, route));
+					var targetNode;
+					// We're hiding the sub nav with CSS media queries so we can take 
+					// the full target for tap here in the JS>
+					if ($('> ol', routeNode).length && Detect.has('screen-large')) {
+						targetNode = $('> .label', routeNode)
+					} else {
+						targetNode = routeNode;
+					}
+					$(targetNode).on("click", _.bind(this._onRouteClick, this, route));
+					$(targetNode).on("touchstart", _.bind(this._onRouteTouchStart, this, route));
 				}, this));
 			};
 
 		},
 
 		_onRouteClick: function(route) {
+			this.router.navigate(route, {trigger: true});
+		},
+
+		_onRouteTouchStart: function(route, e) {
+			e.preventDefault();
 			this.router.navigate(route, {trigger: true});
 		}
 

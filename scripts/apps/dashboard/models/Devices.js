@@ -26,7 +26,6 @@ define([
 			if (!!window.EventSource) {
 				var source = new EventSource(SERVER + 'api/devices/push');
 				source.onmessage = function(e) { 
-					console.log('Source', e);
 					if (e.data) {
 						var newData = JSON.parse(e.data);
 						this.set([newData], {remove: false})
