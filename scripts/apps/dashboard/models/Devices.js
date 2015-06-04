@@ -19,9 +19,9 @@ define([
 		},
 
 		constructor: function() {
-			if (!!window.EventSource) {
-				var source = new EventSource(SERVER + 'api/devices/push');
-				source.onmessage = function(e) { 
+			if (!!window.EventSource && !this._eventSource) {
+				this._eventSource = new EventSource(SERVER + 'api/devices/push');
+				this._eventSource.onmessage = function(e) { 
 					if (e.data) {
 						var newData = JSON.parse(e.data);
 						this.set([newData], {remove: false})
