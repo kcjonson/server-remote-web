@@ -4,14 +4,16 @@ define([
 	'backbone',
 	'text!./Dashboard.html',
 	'./actions/Action',
-	'./dashboard/User'
+	'./dashboard/User',
+	'./dashboard/WeatherCondition'
 ], function(
 	$,
 	_,
 	Backbone,
 	templateString,
 	Action,
-	User
+	User,
+	WeatherCondition
 ){
 	
 
@@ -26,6 +28,7 @@ define([
 		fetchData: true,
 		_userViews: {},
 		_actionViews: {},
+		_weatherConditionViews: {},
 
 		initialize: function(args) {
 			this.appModel = args.appModel;
@@ -33,6 +36,7 @@ define([
 			this.usersModel = this.appModel.usersModel;
 			this.devicesModel = this.appModel.devicesModel;
 			this.actionsModel = this.appModel.actionsModel;
+			this.weatherModel = this.appModel.weatherModel;
 			this.router = args.router;
 			
 			this._initializeTemplate();
@@ -50,6 +54,9 @@ define([
 
 			this._addActions();
 			this.actionsModel.on('add', _.bind(this._onActionsModelAdd, this));
+
+			this._updateWeatherDisplay();
+			this.weatherModel.on('change', this._onWeatherModelChange.bind(this));
 		},
 
 		
@@ -69,6 +76,10 @@ define([
 					this[attachPointName] = attachPointNode;
 				}, this));
 			};
+
+			this._weatherConditionViews.worst = new WeatherCondition({label: 'Worst'}).placeAt(this._weatherConditionsNode);
+			this._weatherConditionViews.now = new WeatherCondition({label: 'Now'}).placeAt(this._weatherConditionsNode);
+			this._weatherConditionViews.best = new WeatherCondition({label: 'Best'}).placeAt(this._weatherConditionsNode);
 			
 		},
 		
@@ -131,6 +142,10 @@ define([
 
 		_onActionsModelAdd: function(actionModel) {
 			this._addAction(actionModel);
+		},
+
+		_onWeatherModelChange: function() {
+			this._updateWeatherDisplay()
 		},
 
 
@@ -224,6 +239,19 @@ define([
 			} else {
 				this._thermostatsStatusNode.innerHTML = 'Off'
 			}
+
+		},
+
+
+		// Weather
+
+		_updateWeatherDisplay: function() {
+			console.log(this.weatherModel);
+			var todaysForecast = this.weatherModel.get('todaysForecast')
+			console.log(todaysForecast)
+			this._weatherConditionViews.worst.setData(this.weatherModel.get('hourlyWorst'), todaysForecast);
+			this._weatherConditionViews.now.setData(this.weatherModel.get('currently'), todaysForecast);
+			this._weatherConditionViews.best.setData(this.weatherModel.get('hourlyBest'), todaysForecast);
 
 		}
 

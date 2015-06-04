@@ -6,7 +6,8 @@ define([
 	'app/models/Devices',
 	'app/models/Users',
 	'app/models/Actions',
-	'app/models/Settings'
+	'app/models/Settings',
+	'app/models/Weather'
 ], function(
 	$,
 	_,
@@ -15,7 +16,8 @@ define([
 	DevicesModel,
 	UsersModel,
 	ActionsModel,
-	SettingsModel
+	SettingsModel,
+	WeatherModel
 ){
 
 
@@ -45,6 +47,9 @@ define([
 
 			this.settingsModel = new SettingsModel();
 			this.settingsModel.on("all", this._onModelAll.bind(this));
+
+			this.weatherModel = new WeatherModel();
+			this.weatherModel.on("all", this._onModelAll.bind(this));
 		},
 
 		fetch: function(args) {
@@ -55,10 +60,11 @@ define([
 				this.devicesModel.fetch(args),
 				this.usersModel.fetch(args),
 				this.actionsModel.fetch(args),
-				this.settingsModel.fetch(args)
+				this.settingsModel.fetch(args),
+				this.weatherModel.fetch(args)
 			).done(function(){
 				this.trigger('sync:all');
-			}.bind(this));
+			}.bind(this))
 		},
 
 		_onModelAll: function(eventName) {

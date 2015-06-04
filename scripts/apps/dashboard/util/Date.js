@@ -8,6 +8,7 @@ define([], function(){
 
 
 	return {
+
 		formatRelativeDate: function(relativeDate) {
 
 			var relativeString;
@@ -32,6 +33,26 @@ define([], function(){
 				relativeString = Math.round(deltaTime / second) + 's';
 			}
 			return relativeString;
+		},
+
+		formatClockTime: function(date) {
+			date = new Date(date);
+			var hour = date.getHours();
+			var minute = date.getMinutes()
+			if (typeof hour === 'number' && typeof minute === 'number') {
+				if (minute.toString().length < 2) {
+					minute = "0" + minute;
+				}
+				return hour + ':' + minute;
+			}
+		},
+
+		isToday: function(date) {
+			var now = new Date();
+			var then = new Date(date);
+			return (now.getDate() == then.getDate() 
+			        && now.getMonth() == then.getMonth()
+			        && now.getFullYear() == then.getFullYear())
 		}
 	}
 

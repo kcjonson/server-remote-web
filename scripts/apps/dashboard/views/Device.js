@@ -44,7 +44,6 @@ define([
 
 		show: function(params) {
 			View.prototype.show.call(this);
-			console.log(params);
 			if (params && params.length > 0) {
 				var id = params[0];
 				var model = this.devicesModel.findWhere({'_id': id});

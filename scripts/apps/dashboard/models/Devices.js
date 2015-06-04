@@ -1,16 +1,12 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone',
+	'app/core/Collection',
 	'app/models/devices/Device'
 ], function(
-	$,
-	_,
-	Backbone,
+	Collection,
 	DeviceModel
 ){
 	
-	return Backbone.Collection.extend({
+	return Collection.extend({
 
 		url: function() {
 			return SERVER + 'api/devices'
