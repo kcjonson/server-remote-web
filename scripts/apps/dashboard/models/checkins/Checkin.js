@@ -1,15 +1,11 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone',
-	'backbone-relational'
+	'app/core/Model'
 ], function(
-	$,
-	_,
-	Backbone
+	Model
 ){
+
 	
-	return Backbone.RelationalModel.extend({
+	return Model.extend({
 		urlRoot: 'api/checkins/checkin/',
 		idAttribute: '_id'
 	});

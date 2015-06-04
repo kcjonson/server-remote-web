@@ -1,15 +1,11 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone'
+	'app/core/Model'
 ], function(
-	$,
-	_,
-	Backbone
+	Model
 ){
 
 
-	return Backbone.Model.extend({
+	return Model.extend({
 
 		idAttribute: "_id",
 

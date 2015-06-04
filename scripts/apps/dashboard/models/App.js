@@ -53,8 +53,6 @@ define([
 		},
 
 		fetch: function(args) {
-			console.log('/models/App.fetch()');
-
 			$.when(
 				this.alarmsModel.fetch(args),
 				this.devicesModel.fetch(args),

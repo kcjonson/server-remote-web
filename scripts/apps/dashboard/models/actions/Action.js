@@ -1,14 +1,11 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone'
+	'app/core/Model'
 ], function(
-	$,
-	_,
-	Backbone
+	Model
 ){
+
 	
-	return Backbone.Model.extend({
+	return Model.extend({
 		urlRoot: SERVER + 'api/actions',
 		idAttribute: '_id',
 		execute: function() {

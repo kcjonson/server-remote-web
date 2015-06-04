@@ -35,10 +35,7 @@ define([
 						callback(response.error)
 					}
 				}.bind(this)
-			}).error(function(err){
-			 	callback(err)
-			}.bind(this));
-
+			}).error(callback.bind(this));
 		},
 
 	}

@@ -157,7 +157,6 @@ define([
 
 					break;
 				case 'ITUNES': 
-
 					var state = this.model.get('state');
 					$(this._stateNode).toggleClass('on', state == 'playing');
 

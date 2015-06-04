@@ -1,16 +1,12 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone',
+	'app/core/Collection',
 	'app/models/alarms/Alarm'
 ], function(
-	$,
-	_,
-	Backbone,
+	Collection,
 	AlarmModel
 ){
 	
-	return Backbone.Collection.extend({
+	return Collection.extend({
 		url: function() {
 			return SERVER + 'api/alarms'
 		},

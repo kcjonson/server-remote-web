@@ -1,27 +1,16 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone',
-	'backbone-relational'
+	'app/core/Model'
 ], function(
-	$,
-	_,
-	Backbone
+	Model
 ){
 
 
-
 	
-	return Backbone.RelationalModel.extend({
+	return Model.extend({
 
 		url: function() {
 			return SERVER + '/api/checkins'
-		},
-
-		relations: [
-
-		]
-
+		}
 	
 	});
 

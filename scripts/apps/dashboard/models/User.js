@@ -1,35 +1,17 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone',
-	'backbone-relational'
+	'app/core/Model',
 ], function(
-	$,
-	_,
-	Backbone
+	Model
 ){
 
 
 
 	
-	return Backbone.RelationalModel.extend({
-
+	return Model.extend({
 		idAttribute: '_id',
-		//urlRoot: SERVER + 'api/users/user',
-
 		url: function() {
 			return SERVER + 'api/users/' + this.id;
-		},
-
-		// relations: [
-		// 	{
-		// 		key: 'checkins',
-		// 		type: Backbone.HasMany,
-		// 		collectionType: Checkins,
-		// 		relatedModel: Checkin
-		// 	}
-		// ]
-
+		}
 	});
 
 });

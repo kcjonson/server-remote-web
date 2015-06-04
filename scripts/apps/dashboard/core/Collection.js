@@ -1,18 +1,22 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone'
+	'backbone',
+	'app/util/Error'
 ], function(
-	$,
-	_,
-	Backbone
+	Backbone,
+	errorUtil
 ){
 	
 	return Backbone.Collection.extend({
 
+		initialize: function() {
+			this.on('error', function(collection, res, options){
+				errorUtil.show(res.responseText || res.statusText || res.status);
+			})
+		},
+
 		parse: function(res, req) {
 			if (res.error) {
-				console.error(res.error)
+				errorUtil.show(res.error);
 				delete res.error;
 			}
 			return res;

@@ -56,14 +56,17 @@ define([
 
 		show: function() {
 			this.$el.removeClass('hidden');
+			$('body').addClass('loaded');
 			var error = ErrorUtil.getAll()[0];
-			var errorText;
-			if (typeof error == 'string') {
-				errorText = error;
-			} else if (error.statusText == 'timeout') {
-				errorText = 'The server appears to be down!'
-			} else if (error.error) {
-				errorText = error.error;
+			var errorText = 'An unknown error occured'
+			if (error) {
+				if (typeof error == 'string') {
+					errorText = error;
+				} else if (error.statusText == 'timeout') {
+					errorText = 'The server appears to be down!'
+				} else if (error.error) {
+					errorText = error.error;
+				}
 			}
 			this._errorNode.innerHTML = errorText;
 		},

@@ -55,7 +55,7 @@ require([
 // Startup
 
 
-	$.ajaxSetup({timeout:10000});
+	$.ajaxSetup({timeout:6000});
 	var appModel = new AppModel();
 
 	// Set Up Router & Start History
@@ -63,6 +63,7 @@ require([
 		appModel: appModel,
 		el: $('body > .views')
 	});
+	ErrorUtil.setRouter(router);
 
 	// Create Common UI
 	navigation = new Navigation({
@@ -77,15 +78,14 @@ require([
 
 
 
-	CurrentUser.authenticate(function(error){
-		if (error && error.status == 401) {
+	CurrentUser.authenticate(function(res){
+		if (res && res.status == 401) {
 			_startHistory(true);
 			$('body').addClass('loaded');
 			router.navigate('login', {trigger: true});
-		} else if (error) {
+		} else if (res) {
 			_startHistory(true);
-			$('body').addClass('loaded');
-			ErrorUtil.show(error, router);
+			ErrorUtil.show(res.responseText || res.statusText, router);
 		} else {
 			appModel.once("sync:all", function(){
 				setTimeout(function(){

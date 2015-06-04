@@ -1,16 +1,12 @@
 define([
-	'jquery',
-	'underscore',
-	'backbone',
+	'app/core/Collection',
 	'app/models/actions/Action'
 ], function(
-	$,
-	_,
-	Backbone,
+	Collection,
 	ActionModel
 ){
 	
-	return Backbone.Collection.extend({
+	return Collection.extend({
 		url: function() {
 			return SERVER + 'api/actions'
 		},
