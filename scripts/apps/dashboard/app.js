@@ -39,11 +39,6 @@ require([
 	var isCordova = !!window.cordova;
 
 
-
-	// Fun Hack for iOS
-	document.addEventListener("touchstart", function() {},false);
-
-
 	var router;
 	var navigation;
 	var header;
@@ -54,8 +49,7 @@ require([
 
 // Startup
 
-
-	$.ajaxSetup({timeout:6000});
+	$.ajaxSetup({timeout:12000});
 	var appModel = new AppModel();
 
 	// Set Up Router & Start History
@@ -125,6 +119,25 @@ require([
 	}
 
 
+
+// iOS Specific
+
+	
+	// Fun Hack for iOS
+	// I totally forgot what this does. -KCJ
+	document.addEventListener("touchstart", function() {},false);
+
+	// Tap highlight should not show once scroll starts. 
+	// This appears only on real devices, not chrome simulation mode.
+	// The "views" div is the only scroll container so we can add handlers
+	// there that give us a css selector to suppress the :active styles with
+	// css like *:not(.scrolling) -KCJ
+	$('body > .views').on('touchmove', function(){
+		$('body > .views').addClass('scrolling');
+	})
+	$('body > .views').on('touchend', function(){
+		$('body > .views').removeClass('scrolling');
+	})
 
 
 });

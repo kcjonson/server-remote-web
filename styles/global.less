@@ -1,4 +1,26 @@
 	@import './weather-icons.css';
+	@import './font-awesome.css';
+
+	@font-face {
+		font-family: 'Roboto';
+		font-style: normal;
+		font-weight: 300;
+		src: local('Roboto Light'), local('Roboto-Light'), url(../fonts/Roboto-Light.woff) format('woff');
+	}
+	@font-face {
+		font-family: 'Roboto';
+		font-style: normal;
+		font-weight: 400;
+		src: local('Roboto'), local('Roboto-Regular'), url(../fonts/Roboto-Regular.woff) format('woff');
+	}
+	@font-face {
+		font-family: 'Roboto';
+		font-style: normal;
+		font-weight: 700;
+		src: local('Roboto Bold'), local('Roboto-Bold'), url(../fonts/Roboto-Bold.woff) format('woff');
+	}
+
+
 
 	@highlight-color: #45C7EC;
 	@text-color-light: #ccc;
@@ -13,7 +35,7 @@
 		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	}
 
-	.clickable {
+	*:not(.scrolling) .clickable {
 		cursor: pointer;
 		&:active {
 			color: @highlight-color;
