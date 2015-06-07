@@ -117,6 +117,7 @@ require([
 
 	function _onDeviceReady() {
 		document.addEventListener("resume", _onResume, false);
+		navigator.splashscreen.hide();
 	}
 
 	function _onResume() {
