@@ -11,8 +11,12 @@
 	.Dashboard {
 
 
-
-
+		// We want the dash to be a littler denser
+		// than other views, so were overridding the default styles.
+		.list > * > * {
+			padding-top: .2em;
+			padding-bottom:  .2em;
+		}
 
 
 		
@@ -56,6 +60,7 @@
 			ol {
 				display: table;
 				width: 100%;
+				margin-top: .8rem;
 				
 				> * {
 					display: table-cell;
@@ -71,6 +76,7 @@
 		.devices {
 			.status {
 				text-align: right;
+				line-height: 1.3rem;  // Icons hold greater height on other lists.
 			}
 		}
 
