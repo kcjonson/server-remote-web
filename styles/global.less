@@ -26,30 +26,10 @@
 	@text-color-light: #ccc;
 	
 	
-	a {
-		color: #fff;
-		text-decoration: none;
-	}
-
-	* {
-		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	}
-
-	*:not(.scrolling) .clickable {
-		cursor: pointer;
-		&:active {
-			color: @highlight-color;
-		}
-	}
 
 
 
-	
-	// Utility Classes
-	
-	.hidden {
-		display: none !important;
-	}
+// Document and Element Setup
 
 	html,
 	body {
@@ -71,7 +51,11 @@
 		user-select: none;
 	}
 
-	
+	a {
+		color: #fff;
+		text-decoration: none;
+	}
+
 
 
 
@@ -79,6 +63,27 @@
 
 
 // Utility Classes
+
+	.hidden {
+		display: none !important;
+	}
+
+
+
+	body:not(.cordova):not(.touch) {
+
+		.clickable {
+			cursor: pointer;
+		}
+
+		.views:not(.scrolling) .clickable {
+			&:active {
+				color: @highlight-color;
+			}
+		}
+
+	}
+
 
 	.list {
 		> * {
@@ -96,6 +101,7 @@
 			}
 
 		}
+
 	}
 
 
@@ -121,6 +127,30 @@
 			}
 		}
 
+		// Pull list out of section padding. 
+		// They have their own padding and also we want the
+		// tap highlight color to touch both sides of the screen. -KCJ
+		.list {
+			margin-left: -1em;
+			margin-right: -1em;
+		}
+	}
+
+
+
+// Device and Feature Modifications
+
+	
+	* {
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	}
+
+
+
+	body.cordova.touch {
+		.views:not(.scrolling) .clickable:active {
+			background-color: rgba(0, 0, 0, .2);
+		}
 	}
 
 	

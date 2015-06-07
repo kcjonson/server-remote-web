@@ -103,10 +103,17 @@ require([
 
 
 
+
+
+
+
+
 // Cordova Specific
 
 	if (isCordova) {
 		document.addEventListener("deviceready", _onDeviceReady, false);
+		$(document.body).addClass('cordova');
+		$(document.body).addClass('touch');  // Hard coded for now since we're only supporting iOS
 	} 
 
 	function _onDeviceReady() {

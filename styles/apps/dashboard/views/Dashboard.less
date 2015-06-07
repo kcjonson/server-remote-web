@@ -13,12 +13,6 @@
 
 
 
-		.list {
-			> * > * {
-				padding: .2em 0 .2em 0;
-			}
-		}
-
 
 
 		
@@ -37,10 +31,6 @@
 				
 				.time {
 					font-size: 3em;
-
-					&:active {
-						color: @highlight-color;
-					}
 				}
 				
 				.status {
@@ -54,18 +44,7 @@
 							color: #96CA2D;
 						}
 					}
-					
-					.isRunning {
-						
-					}
-					
-					.isOn,
-					.isRunning {
-						&:active {
-							color: @highlight-color !important;
-						}
-					}
-					
+
 				}
 				
 			}
@@ -87,27 +66,17 @@
 
 		}
 
-		.actions {
-
-
-			.Action {
-
-
-				.label {
-					&:active {
-						color: @highlight-color;
-					}
-				}
-
-			}
-
-
-		}
 
 
 		.devices {
 			.status {
 				text-align: right;
+			}
+		}
+
+		.actions {
+			.list {
+
 			}
 		}
 
