@@ -49,7 +49,7 @@ require([
 
 // Startup
 
-	$.ajaxSetup({timeout:12000});
+	//$.ajaxSetup({timeout:12000});
 	var appModel = new AppModel();
 
 	// Set Up Router & Start History
