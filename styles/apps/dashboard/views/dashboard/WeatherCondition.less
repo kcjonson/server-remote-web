@@ -1,0 +1,35 @@
+
+	.WeatherCondition {
+
+		> * {
+			display: block;
+			text-align: center;
+
+			&:not(.condition) {
+
+			}
+		}
+
+		.condition {
+			margin-bottom: .3rem;
+
+			&:before {
+				display: block;
+				font-size: 2rem;
+			}
+		}
+
+		.temperature {
+			font-size: 1.1rem;
+			font-weight: bold;
+		}
+
+		.label {
+			font-size: .9rem;
+			color: #ccc;
+		}
+
+
+
+
+	}
