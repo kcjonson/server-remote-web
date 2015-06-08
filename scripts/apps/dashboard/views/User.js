@@ -80,8 +80,10 @@ define([
 			}
 			var c = '';
 			checkins.forEach(function(checkin, index) {
+				var iconClass = checkin.action == 'ENTER' ? 'fa-arrow-right enter' : ' fa-arrow-left exit'; 
 				c += '<li>'
 				c += '<span class="date">' + this._formatDate(checkin.date)  + '</span>';
+				c += '<span class="action fa ' + iconClass + '"></span>';
 				c += '<span class="name">' + checkin.name  + '</span>';
 				c += '</li>'
 			}.bind(this));

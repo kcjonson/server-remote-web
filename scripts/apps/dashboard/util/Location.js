@@ -1,9 +1,11 @@
 define([
 	'jquery',
+	'underscore',
 	'./Detect',
 	'./CurrentUser'
 ], function(
 	$,
+	_,
 	Detect,
 	CurrentUserUtil
 ){
@@ -20,14 +22,13 @@ define([
 
 		watch: function() {
 			if (Detect.has('cordova') && !WATCH_ID) {
+				console.log('Starting to watch position');
 				var options = { enableHighAccuracy: true };
-       			WATCH_ID = navigator.geolocation.watchPosition(this._onWatchPositionSuccess.bind(this), this._onWatchPositionError.bind(this), options);
+       			WATCH_ID = navigator.geolocation.watchPosition(_.throttle(this._onWatchPositionSuccess.bind(this), 60000), this._onWatchPositionError.bind(this), options);
 			}
 		},
 
 		_onWatchPositionSuccess: function(position) {
-			console.log('wp', position);
-
 			var userModel = CurrentUserUtil.getModel();
 			if (userModel) {
 				$.ajax({
@@ -35,8 +36,7 @@ define([
 					type: 'POST',
 					data: position
 				});
-			}
-
+			};
 		},
 
 		_onWatchPositionError: function(err) {
