@@ -44,11 +44,6 @@
 		color: #fff;
 		font-weight: lighter;
 
-		// Since this is meant to be "app like", and the majority
-		// of the elements are interactive, we're going to make
-		// user-select opt in.
-		-webkit-user-select: none;
-		user-select: none;
 	}
 
 	a {
@@ -148,6 +143,9 @@
 
 
 	body.cordova.touch {
+		-webkit-user-select: none;
+		user-select: none;
+
 		.views:not(.scrolling) .clickable:active {
 			background-color: rgba(0, 0, 0, .2);
 		}
