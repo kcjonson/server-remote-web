@@ -1,6 +1,8 @@
 define([
+	'jquery',
 	'../models/User'
 ], function(
+	$,
 	UserModel
 ){
 

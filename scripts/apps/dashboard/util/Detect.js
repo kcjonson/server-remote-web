@@ -16,6 +16,9 @@ define([], function(){
 				case 'touch':
 					//Todo
 					break;
+				case 'cordova':
+					found = !!window.cordova;
+					break;
 			}
 			return found;
 		}

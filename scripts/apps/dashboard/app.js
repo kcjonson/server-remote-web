@@ -26,17 +26,19 @@ require([
 	'app/views/Navigation',
 	'app/views/Header',
 	'app/util/CurrentUser',
-	'app/util/Error'
+	'app/util/Error',
+	'app/util/Location',
+	'app/util/Detect'
 ], function(
 	Router,
 	AppModel,
 	Navigation,
 	Header,
 	CurrentUser,
-	ErrorUtil
+	ErrorUtil,
+	LocationUtil,
+	Detect
 ){
-
-	var isCordova = !!window.cordova;
 
 
 	var router;
@@ -70,8 +72,6 @@ require([
 		appModel: appModel
 	});
 
-
-
 	CurrentUser.authenticate(function(res){
 		if (res && res.status == 401) {
 			_startHistory(true);
@@ -81,6 +81,7 @@ require([
 			_startHistory(true);
 			ErrorUtil.show(res.responseText || res.statusText, router);
 		} else {
+			LocationUtil.watch();
 			appModel.once("sync:all", function(){
 				setTimeout(function(){
 					$('body').addClass('loaded');
@@ -93,7 +94,7 @@ require([
 	function _startHistory(silent) {
 		// This needs go after things that subscribe to route
 		// events as it triggers the initial "route" on start()
-		pushState = isCordova ? false : true;
+		pushState = Detect.has('cordova') ? false : true;
 		Backbone.history.start({
 			root: '/server-remote-web/',
 			pushState: pushState,
@@ -110,7 +111,7 @@ require([
 
 // Cordova Specific
 
-	if (isCordova) {
+	if (Detect.has('cordova')) {
 		document.addEventListener("deviceready", _onDeviceReady, false);
 		$(document.body).addClass('cordova');
 		$(document.body).addClass('touch');  // Hard coded for now since we're only supporting iOS
