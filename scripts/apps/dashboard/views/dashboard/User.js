@@ -36,6 +36,7 @@ define([
 		},
 
 		_updateDisplay: function() {
+			console.log('change', this.userModel);
 			this._nameNode.innerHTML = this.userModel.get('name').first;
 			var mostRecentCheckin = this.userModel.get('mostRecentCheckin');
 			if (mostRecentCheckin) {

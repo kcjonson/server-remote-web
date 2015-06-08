@@ -42,8 +42,6 @@ define([
 
 
 		initialize: function () {
-
-
 			for (var key in MODEL_CONSTRUCTORS) {
 				if (MODEL_CONSTRUCTORS.hasOwnProperty(key)) {
 					this[key] = new MODEL_CONSTRUCTORS[key]();
@@ -55,40 +53,61 @@ define([
 
 		fetch: function(args) {
 
+			if (!!window.EventSource && !this._eventModelDataSource) {
 
-			// var modelsLoaded = 0;
-			// var modelsToLoad = Object.keys(MODEL_CONSTRUCTORS).length;
-			// if (!!window.EventSource && !this._eventSource) {
-			// 	this._eventSource = new EventSource(SERVER + 'api');
+				// Set up the EventSource (this opens the connection)
+				this._eventModelDataSource = new EventSource(SERVER + 'api');
 
-			// 	this._eventSource.addEventListener('modeldata', function(e) {
-			// 		//console.log('Model Data', e.data);
-			// 		var data = JSON.parse(e.data);
-			// 		var model = ENDPOINT_TO_MODEL_MAP[SERVER + data.endpoint];
-			// 		model.set(data.payload);
-			// 		modelsLoaded += 1;
-			// 		if (modelsLoaded == modelsToLoad) {
-			// 			this.trigger('sync:all');
-			// 			this._eventSource.close();
-			// 		}
-			// 	}.bind(this), false);
+				// Model Data Event
+				// On first load we're going to stream the whole payload from 
+				// all the various models that we need, then close the connection.
+				var modelsLoaded = 0;
+				var modelsToLoad = Object.keys(MODEL_CONSTRUCTORS).length;
+				this._eventModelDataSourceListener = this._eventModelDataSource.addEventListener('modeldata', function(e) {
+					var data = JSON.parse(e.data);
+					var model = ENDPOINT_TO_MODEL_MAP[SERVER + data.endpoint];
+					model.set(data.payload);
+					modelsLoaded += 1;
+					if (modelsLoaded == modelsToLoad) {
+						this.trigger('sync:all');  // Very important, main trigger for App startup!
+						this._eventModelDataSource.removeEventListener('modeldata', this._eventModelDataSourceListener);
+					};
+				}.bind(this), false);
 
-			// 	this._eventSource.addEventListener('error', function(e) {
-			// 		this._eventSource.close();
-			// 	}.bind(this), false);
-			// };
+				// Model Push Event
+				// We're leaving the same connection open that we initally use
+				// and just listening to push events that contain partial data.
+				// Backbone is doing the hard work and doing the merge and firing
+				// the correct change events (if applicable) for us.
+				this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(e) {
+					var data = JSON.parse(e.data);
+					var model = ENDPOINT_TO_MODEL_MAP[SERVER + data.endpoint];
+					model.set(data.payload, {remove: false});
+				}.bind(this), false);
 
+				// Error Handler
+				// Most routes make a call for "fetch" so there is a high chance that
+				// this will get re-attached if the connection was dropped.
+				this._eventModelDataSource.addEventListener('error', function(e) {
+					this._eventModelDataSource.close();
+					this._eventModelDataSource = undefined;
+				}.bind(this), false);
 
-			$.when(
-				this.alarmsModel.fetch(args),
-				this.devicesModel.fetch(args),
-				this.usersModel.fetch(args),
-				this.actionsModel.fetch(args),
-				this.settingsModel.fetch(args),
-				this.weatherModel.fetch(args)
-			).done(function(){
-				this.trigger('sync:all');
-			}.bind(this))
+			} else if (this._eventModelDataSource) {
+				//console.log('Event Source Still Active');
+			} else {
+				//console.log('Manually initiating fetch');
+				$.when(
+					this.alarmsModel.fetch(args),
+					this.devicesModel.fetch(args),
+					this.usersModel.fetch(args),
+					this.actionsModel.fetch(args),
+					this.settingsModel.fetch(args),
+					this.weatherModel.fetch(args)
+				).done(function(){
+					this.trigger('sync:all');
+				}.bind(this))
+			}
 		},
 
 		_onModelAll: function(eventName) {
@@ -97,14 +116,9 @@ define([
 			this.trigger(eventName, arguments);
 		}
 
-
 	});
 
 
-
-
 	return AppModel;
-
-
 
 });
