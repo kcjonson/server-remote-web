@@ -72,6 +72,10 @@ require([
 		appModel: appModel
 	});
 
+
+	// Check user credentials up front.
+	// Probally don't have to do this if we're handing errors
+	// on all the models properly.	
 	CurrentUser.authenticate(function(res){
 		if (res && res.status == 401) {
 			_startHistory(true);
@@ -101,8 +105,6 @@ require([
 			silent: silent || false
 		});
 	}
-
-
 
 
 
