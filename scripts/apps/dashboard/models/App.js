@@ -71,18 +71,18 @@ define([
 					if (modelsLoaded == modelsToLoad) {
 						this.trigger('sync:all');  // Very important, main trigger for App startup!
 						this._eventModelDataSource.removeEventListener('modeldata', this._eventModelDataSourceListener);
-					};
-				}.bind(this), false);
 
-				// Model Push Event
-				// We're leaving the same connection open that we initally use
-				// and just listening to push events that contain partial data.
-				// Backbone is doing the hard work and doing the merge and firing
-				// the correct change events (if applicable) for us.
-				this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(e) {
-					var data = JSON.parse(e.data);
-					var model = ENDPOINT_TO_MODEL_MAP[SERVER + data.endpoint];
-					model.set(data.payload, {remove: false});
+						// Model Push Event
+						// We're leaving the same connection open that we initally use
+						// and just listening to push events that contain partial data.
+						// Backbone is doing the hard work and doing the merge and firing
+						// the correct change events (if applicable) for us.
+						this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(e) {
+							var data = JSON.parse(e.data);
+							var model = ENDPOINT_TO_MODEL_MAP[SERVER + data.endpoint];
+							model.set(data.payload, {remove: false});
+						}.bind(this), false);
+					};
 				}.bind(this), false);
 
 				// Error Handler

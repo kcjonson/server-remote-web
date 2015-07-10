@@ -40,7 +40,7 @@ define([
 			this._nameNode.innerHTML = this.userModel.get('name').first;
 			var mostRecentCheckin = this.userModel.get('mostRecentCheckin');
 			if (mostRecentCheckin) {
-				var isHome = mostRecentCheckin.name === 'Home';
+				var isHome = mostRecentCheckin.name === 'Home' && mostRecentCheckin.action === 'ENTER';
 				this.$el.toggleClass('isHome', isHome);
 				this._timestampNode.innerHTML = '(' + DateUtil.formatRelativeDate(mostRecentCheckin.date) + ')';
 			}
