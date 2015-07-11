@@ -47,6 +47,10 @@ require([
 
 
 
+	var viewsNode = $('.views')
+	var navigationNode = $('.navigation')
+	var headerNode = $('.header')
+
 
 
 // Startup
@@ -57,17 +61,17 @@ require([
 	// Set Up Router & Start History
 	router = new Router({
 		appModel: appModel,
-		el: $('body > .views')
+		el: viewsNode
 	});
 	ErrorUtil.setRouter(router);
 
 	// Create Common UI
 	navigation = new Navigation({
-		el: $('body > .footer > .navigation'),
+		el: navigationNode,
 		router: router
 	});
 	header = new Header({
-		el: $('body > .header'),
+		el: headerNode,
 		router: router,
 		appModel: appModel
 	});

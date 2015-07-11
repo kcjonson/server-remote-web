@@ -1,75 +1,127 @@
 
 .Navigation {
-	display: table;
-	width: 100%;
 
-	> * {
-		display: table-cell;
-		text-align: center;
-		width: 33.33%;
-		padding: 10px 5px 5px 5px;
-		color: darken(#fff, 30%);
+	background-color: lighten(@base-color, 10%);
+	color: #fff;
 
-		&.admin {
-			display: none;
+
+
+
+	&.minimized {
+		width: 0;
+		overflow: hidden;
+	}
+
+
+	> ol {
+
+		display: table;
+		width: 100%;
+
+		> * {
+			display: table-cell;
+			text-align: center;
+			width: 33.33%;
+			padding: 10px 5px 5px 5px;
+			color: darken(#fff, 30%);
+
+			&.admin {
+				display: none;
+
+				@media (min-width: @screen-large) {
+					display: block;
+				}
+			}
 
 			@media (min-width: @screen-large) {
 				display: block;
+				text-align: left;
+				width: auto;
+				padding: .8rem .8rem 0 .8rem;
+				
+			}
+
+			> ol {
+				display: none;
+				margin-left: 2rem;
+
+				> * {
+					padding: .2rem .2rem 0 0;
+				}
+
+				@media (min-width: @screen-large) {
+					display: block;
+				}
 			}
 		}
 
-		@media (min-width: @screen-large) {
+		.selected > .label {
+			color: #fff;
+		}
+
+		:not(.selected) {
+			cursor: pointer;
+		}
+
+		.label {
 			display: block;
-			text-align: left;
-			width: auto;
-			padding: .8rem .8rem 0 .8rem;
-			
-		}
+			font-size: 11px;
 
-		> ol {
-			display: none;
-			margin-left: 2rem;
-
-			> * {
-				padding: .2rem .2rem 0 0;
-			}
-
-			@media (min-width: @screen-large) {
+			&:before {
 				display: block;
+				font-size: 30px;
+				padding-bottom: 5px;
+
+				@media (min-width: @screen-large) {
+					display: inline-block;
+					font-size: 1.2rem;
+					margin-right: .8rem;
+					width: 1.2rem;
+				}
 			}
-		}
-	}
-
-	.selected > .label {
-		color: #fff;
-	}
-
-	:not(.selected) {
-		cursor: pointer;
-	}
-
-	.label {
-		display: block;
-		font-size: 11px;
-
-		&:before {
-			display: block;
-			font-size: 30px;
-			padding-bottom: 5px;
 
 			@media (min-width: @screen-large) {
 				display: inline-block;
-				font-size: 1.2rem;
-				margin-right: .8rem;
-				width: 1.2rem;
+				font-size: .8rem;
 			}
 		}
 
+	}
+
+	> .shide {
+		display: none;
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 0;
+		height: 0;
+
+		&:before {
+			display: block;
+			box-sizing: border-box;
+			position: absolute;
+			bottom: .5rem;
+			height: 2.2rem;
+			width: 1.5rem;
+			left: 0;
+			text-align: center;
+			line-height: 2.2rem;
+			padding-right: .2rem;  // Help center the icon.
+			background-color: lighten(@base-color, 10%);
+			cursor: pointer;
+			border-top-right-radius: .2rem;
+			border-bottom-right-radius: .2rem;
+		}
+
+		&:hover:before {
+			background-color: @base-color;
+		}
+
 		@media (min-width: @screen-large) {
-			display: inline-block;
-			font-size: .8rem;
+			
 		}
 	}
+
 
 
 }

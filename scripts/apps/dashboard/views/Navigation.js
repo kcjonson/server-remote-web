@@ -19,13 +19,39 @@ define([
 	// Init
 		name: 'Navigation',
 		shown: true,
-		tagName: "ol",
+		minimized: false,
+		tagName: "div",
 
 		initialize: function(args) {
 			this._options = {}; // Store node refs for nav options.
 			this.router = args.router;	
 			this._initializeTemplate();
 
+
+
+
+			// Attach Main Interaction Handlers
+			$('[data-route]', this.$el).each(_.bind(function(index, routeNode){
+				var route = routeNode.attributes['data-route'].value;
+				this._options[route] = routeNode;
+				var targetNode;
+				// We're hiding the sub nav with CSS media queries so we can take 
+				// the full target for tap here in the JS>
+				if ($('> ol', routeNode).length && Detect.has('screen-large')) {
+					targetNode = $('> .label', routeNode)
+				} else {
+					targetNode = routeNode;
+				}
+				$(targetNode).on("click", _.bind(this._onRouteClick, this, route));
+				$(targetNode).on("touchstart", _.bind(this._onRouteTouchStart, this, route));
+			}, this));
+
+
+			// Setup show/hide
+			this._shideNode.addEventListener('click', this._toggleMinimized.bind(this));
+
+
+			// Listen for route changes
 			this.router.on("route", _.bind(function(route, params) {
 			    for (var option in this._options) {
 			    	if (this._options.hasOwnProperty(option)) {
@@ -55,9 +81,15 @@ define([
 				this.$el.addClass('hidden');
 				this.shown = false;
 			}
-			
 		},
-		
+
+
+		_toggleMinimized: function() {
+			this.minimized = !this.minimized;
+			this.$el.toggleClass('minimized', this.minimized);
+		},
+
+
 		_initializeTemplate: function() {
 		
 			// Consume template string
@@ -73,20 +105,7 @@ define([
 					var attachPointName = attachPointNode.attributes['data-attach-point'].value;
 					this[attachPointName] = attachPointNode;
 				}, this));
-				$('[data-route]', this.$el).each(_.bind(function(index, routeNode){
-					var route = routeNode.attributes['data-route'].value;
-					this._options[route] = routeNode;
-					var targetNode;
-					// We're hiding the sub nav with CSS media queries so we can take 
-					// the full target for tap here in the JS>
-					if ($('> ol', routeNode).length && Detect.has('screen-large')) {
-						targetNode = $('> .label', routeNode)
-					} else {
-						targetNode = routeNode;
-					}
-					$(targetNode).on("click", _.bind(this._onRouteClick, this, route));
-					$(targetNode).on("touchstart", _.bind(this._onRouteTouchStart, this, route));
-				}, this));
+
 			};
 
 		},
