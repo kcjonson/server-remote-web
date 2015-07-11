@@ -19,15 +19,13 @@ define([
 	// Init
 		name: 'Navigation',
 		shown: true,
-		minimized: false,
+		minimized: true,
 		tagName: "div",
 
 		initialize: function(args) {
 			this._options = {}; // Store node refs for nav options.
 			this.router = args.router;	
 			this._initializeTemplate();
-
-
 
 
 			// Attach Main Interaction Handlers
@@ -49,7 +47,7 @@ define([
 
 			// Setup show/hide
 			this._shideNode.addEventListener('click', this._toggleMinimized.bind(this));
-
+			this._toggleMinimized();
 
 			// Listen for route changes
 			this.router.on("route", _.bind(function(route, params) {
@@ -87,6 +85,8 @@ define([
 		_toggleMinimized: function() {
 			this.minimized = !this.minimized;
 			this.$el.toggleClass('minimized', this.minimized);
+			$(this._shideNode).toggleClass('fa-chevron-left', !this.minimized);
+			$(this._shideNode).toggleClass('fa-chevron-right', this.minimized);
 		},
 
 
@@ -105,9 +105,7 @@ define([
 					var attachPointName = attachPointNode.attributes['data-attach-point'].value;
 					this[attachPointName] = attachPointNode;
 				}, this));
-
 			};
-
 		},
 
 		_onRouteClick: function(route) {

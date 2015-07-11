@@ -16,6 +16,12 @@
 		.list > * > * {
 			padding-top: .2em;
 			padding-bottom:  .2em;
+
+			&:first-child {
+				-webkit-flex: 1 0 auto;
+				flex: 1 0 auto;
+
+			}
 		}
 
 
@@ -68,22 +74,58 @@
 					vertical-align: middle;
 				}
 			}
-
 		}
 
+		@media (min-width: @screen-large) {
 
+		    display: flex;
+		    flex-direction: row;
+		    flex-wrap: wrap;
+		    justify-content: flex-start;
+		    align-content: flex-start;
+		    align-items: flex-start;
 
-		.devices {
-			.status {
-				text-align: right;
-				line-height: 1.3rem;  // Icons hold greater height on other lists.
+		    .section {
+		    	margin: 0;
+		    }
+
+			.users {
+			    order: 0;
+			    flex: 1 1 auto;
+			    align-self: auto;
 			}
-		}
 
-		.actions {
-			.list {
-
+			.alarm {
+			    order: 1;
+			    flex: 0 1 200px;
+			    align-self: auto;
 			}
+
+			.flexboxBreak {
+				order: 2;
+			    flex: 1 1 100%;
+			    align-self: auto;
+			}
+
+			.weather {
+			    order: 3;
+			    flex: 0 1 200px;
+			    align-self: auto;
+			}
+
+			.devices {
+			    order: 4;
+			    flex: 1 1 auto;
+			    align-self: auto;
+			}
+
+			.actions {
+			    display: none;
+			}
+
+
+
+
 		}
 
 	}

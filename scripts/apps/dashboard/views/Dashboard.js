@@ -4,7 +4,7 @@ define([
 	'backbone',
 	'text!./Dashboard.html',
 	'./actions/Action',
-	'./dashboard/User',
+	'./dashboard/Users',
 	'./dashboard/WeatherCondition'
 ], function(
 	$,
@@ -12,7 +12,7 @@ define([
 	Backbone,
 	templateString,
 	Action,
-	User,
+	Users,
 	WeatherCondition
 ){
 	
@@ -26,27 +26,29 @@ define([
 	// Init
 		name: 'Dashboard',
 		fetchData: true,
-		_userViews: {},
 		_actionViews: {},
 		_weatherConditionViews: {},
 
 		initialize: function(args) {
 			this.appModel = args.appModel;
 			this.alarmsModel = this.appModel.alarmsModel;
-			this.usersModel = this.appModel.usersModel;
 			this.devicesModel = this.appModel.devicesModel;
 			this.actionsModel = this.appModel.actionsModel;
 			this.weatherModel = this.appModel.weatherModel;
 			this.router = args.router;
 			
 			this._initializeTemplate();
+
+			this._usersView = new Users({
+				el: this._usersNode,
+				usersModel: this.appModel.usersModel
+			})
+
+
 			this._alarmTimeNode.addEventListener("click", _.bind(this._onAlarmTimeClick, this));
 			this._alarmStatusNode.addEventListener("click", _.bind(this._onAlarmStatusClick, this));
 
 			this.alarmsModel.on('change add remove reset sort destroy', this._onAlarmsModelChange.bind(this));
-
-			this._addUsers();
-			this.usersModel.on('add', _.bind(this._onUsersModelAdd, this));
 
 			this._updateDevicesDisplay();
 			this.devicesModel.on('change', _.bind(this._onDevicesModelChange, this));
@@ -128,10 +130,6 @@ define([
 			this._updateAlarmsDisplay();
 		},
 
-		_onUsersModelAdd: function(userModel) {
-			this._addUser(userModel);
-		},
-
 		_onDevicesModelAdd: function() {
 			this._updateDevicesDisplay();
 		},
@@ -165,21 +163,6 @@ define([
 				model: actionModel
 			}).placeAt(this._actionsNode);
 		},
-
-
-
-		// Users
-
-		_addUsers: function() {
-			this.usersModel.forEach(this._addUser.bind(this));
-		},
-
-		_addUser: function(userModel) {
-			this._userViews[userModel.get('_id')] = new User({
-				userModel: userModel
-			}).placeAt(this._usersNode);
-		},
-
 
 
 		// Alarms

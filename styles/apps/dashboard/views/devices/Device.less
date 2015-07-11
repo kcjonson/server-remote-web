@@ -5,8 +5,13 @@
 
 		.Device {
 
+			.name {
+				-webkit-flex: 1 0 auto;
+				flex: 1 0 auto;
+			}
+
 			.state {
-				width: 1em;
+				width: 2rem;
 				text-align: center;
 
 				&:before {
@@ -24,7 +29,6 @@
 			.type {
 				-webkit-user-select: text;
 				user-select: text;
-				display: none !important;
 
 				@media (max-width: 900px) {
 					display: none !important;

@@ -1,20 +1,15 @@
 
 .Navigation {
-
 	background-color: lighten(@base-color, 10%);
 	color: #fff;
+	padding-bottom: .5rem;
+	position: relative;
 
-
-
-
-	&.minimized {
-		width: 0;
-		overflow: hidden;
+	&.minimized > ol {
+		display: none;
 	}
 
-
 	> ol {
-
 		display: table;
 		width: 100%;
 
@@ -27,7 +22,6 @@
 
 			&.admin {
 				display: none;
-
 				@media (min-width: @screen-large) {
 					display: block;
 				}
@@ -38,7 +32,6 @@
 				text-align: left;
 				width: auto;
 				padding: .8rem .8rem 0 .8rem;
-				
 			}
 
 			> ol {
@@ -88,40 +81,42 @@
 
 	}
 
+
 	> .shide {
 		display: none;
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		width: 0;
-		height: 0;
-
-		&:before {
-			display: block;
-			box-sizing: border-box;
-			position: absolute;
-			bottom: .5rem;
-			height: 2.2rem;
-			width: 1.5rem;
-			left: 0;
-			text-align: center;
-			line-height: 2.2rem;
-			padding-right: .2rem;  // Help center the icon.
-			background-color: lighten(@base-color, 10%);
-			cursor: pointer;
-			border-top-right-radius: .2rem;
-			border-bottom-right-radius: .2rem;
-		}
-
-		&:hover:before {
-			background-color: @base-color;
-		}
-
-		@media (min-width: @screen-large) {
-			
-		}
 	}
 
+
+	@media (min-width: @screen-large) {
+		> .shide {
+			display: block;
+			position: absolute;
+			right: 0;
+			bottom: 0;
+
+			&:before {
+				display: block;
+				box-sizing: border-box;
+				position: absolute;
+				bottom: .5rem;
+				height: 2.2rem;
+				width: 1.5rem;
+				left: 0;
+				text-align: center;
+				line-height: 2.2rem;
+				padding-right: .2rem;  // Help center the icon.
+				background-color: lighten(@base-color, 10%);
+				cursor: pointer;
+				border-top-right-radius: .2rem;
+				border-bottom-right-radius: .2rem;
+			}
+
+			&:hover:before {
+				background-color: @base-color;
+			}
+
+		}		
+	}
 
 
 }

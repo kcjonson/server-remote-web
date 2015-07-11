@@ -82,21 +82,20 @@
 
 	.list {
 		> * {
-			display: table;
-			border-spacing: 0;
-			border-collapse: collapse;
-			box-sizing: border-box;
-			width: 100%;
-			max-width: 100%;
-
+			display: -webkit-flex;
+			display: flex;
+			-webkit-flex-direction: row;
+			flex-direction: row;
+			-webkit-align-items: center;
+			align-items: center;
 			> * {
-				display: table-cell !important;
-				vertical-align: middle;
-				padding: .8em 1em .8em 1em;
+				padding: .4em 1em .4em 1em;
+				-webkit-order: 0;
+				order: 0;
+				-webkit-flex: 0 0 auto;
+				flex: 0 0 auto;
 			}
-
 		}
-
 	}
 
 

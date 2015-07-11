@@ -14,11 +14,8 @@
 
 	body.dashboard {
 
-
 		&.loaded {
-			> .container > .header,
-			> .container > .views,
-			> .container > .navigation {
+			> .container  {
 				opacity: 1;
 			}
 			> .notice.loading {
@@ -46,8 +43,6 @@
 			}
 		}
 
-
-
 		> .container {
 			display: -webkit-flex;
 			display: flex;
@@ -56,7 +51,8 @@
 			height: 100vh;
 			width: 100vw;
 			overflow: hidden;
-
+			opacity: 0;
+			transition: opacity 0.5s;
 
 			> .main {
 				-webkit-order: 1;
@@ -68,10 +64,11 @@
 				-webkit-flex-direction: column;
 				flex-direction: column;
 
-
 				> .views {
 					-webkit-order: 2;
+					order: 2;
 					-webkit-flex: 1 1 100%;
+					flex: 1 1 100%;
 
 					overflow-y: scroll;
 					overflow-x: hidden;
@@ -95,29 +92,14 @@
 					-webkit-order: 1;
 					-webkit-flex: 0 0 4rem;
 				}
-
 			}
-
 
 			> .navigation {
 				-webkit-order: 2;
 				order: 2;
 			}
 
-
-
-			> .header,
-			> .views,
-			> .navigation {
-				opacity: 0;
-				transition: opacity 0.5s;
-			}
-
-			
-
-
 			@media (min-width: @screen-large) {
-				
 				-webkit-flex-direction: row;
 				flex-direction: row;
 
@@ -131,12 +113,13 @@
 					order: 1;
 					-webkit-flex: 0 0 200px;
 					flex: 0 0 200px;
+
+					&.minimized {
+						flex: 0 0 0;
+					}
 				}
 
 			}
-
-
 		}
-
 	}
 
