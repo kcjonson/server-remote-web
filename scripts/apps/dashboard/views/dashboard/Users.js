@@ -1,5 +1,5 @@
 define([
-	'app/View',
+	'app/core/View',
 	'text!./Users.html',
 	'app/util/Date',
 	'./users/User'

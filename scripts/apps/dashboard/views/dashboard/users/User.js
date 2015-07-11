@@ -2,7 +2,7 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'app/View',
+	'app/core/View',
 	'text!./User.html',
 	'app/util/Date'
 ], function(

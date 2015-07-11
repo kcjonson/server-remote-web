@@ -2,7 +2,7 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'app/View',
+	'app/core/View',
 	'./Device',
 	'app/views/actions/Action',
 	'text!./Category.html'

@@ -2,7 +2,7 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
-	'app/View',
+	'app/core/View',
 	'./common/Gague',
 	'text!./Speaker.html'
 ], function(
