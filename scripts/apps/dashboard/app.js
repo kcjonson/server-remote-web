@@ -146,11 +146,11 @@ require([
 	// The "views" div is the only scroll container so we can add handlers
 	// there that give us a css selector to suppress the :active styles with
 	// css like *:not(.scrolling) -KCJ
-	$('body > .views').on('touchmove', function(){
-		$('body > .views').addClass('scrolling');
+	viewsNode.on('touchmove', function(){
+		viewsNode.addClass('scrolling');
 	})
-	$('body > .views').on('touchend', function(){
-		$('body > .views').removeClass('scrolling');
+	viewsNode.on('touchend', function(){
+		viewsNode.removeClass('scrolling');
 	})
 
 
