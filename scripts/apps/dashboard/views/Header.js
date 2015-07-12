@@ -3,13 +3,15 @@ define([
 	'underscore',
 	'backbone',
 	'text!./Header.html',
-	'../util/CurrentUser'
+	'../util/CurrentUser',
+	'app/components/UserPortrait'
 ], function(
 	$,
 	_,
 	Backbone,
 	templateString,
-	CurrentUser
+	CurrentUser,
+	UserPortrait
 ){
 
 
@@ -24,6 +26,11 @@ define([
 			this.router = args.router;	
 			this._initializeTemplate();
 
+			this._userPortrait = new UserPortrait({
+				el: this._userNode,
+				userModel: CurrentUser.getModel()
+			});
+
 			this.router.on("route", _.bind(function(route, params) {
 			    this._titleNode.innerHTML = route;
 			}, this));
@@ -32,8 +39,6 @@ define([
 			this.router.on('hide:header', this.hide.bind(this));
 
 			this._userNode.addEventListener('click', this._onUserNodeClick.bind(this));
-
-			CurrentUser.getModel().on('change', this._onCurrentUserChange.bind(this));
 
 		},
 
@@ -72,15 +77,6 @@ define([
 
 
 	// Private Events
-
-		_onCurrentUserChange: function(model) {
-			//console.log('user change', model.get('name'), arguments)
-			var firstLetter = model.get('name').first.substr(0,1);
-			var lastLetter = model.get('name').last.substr(0,1);
-			this._userNode.innerHTML = firstLetter + lastLetter;
-
-
-		},
 
 		_onUserNodeClick: function() {
 			this.router.navigate('user', {trigger: true});
