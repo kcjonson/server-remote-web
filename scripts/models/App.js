@@ -67,8 +67,6 @@ define([
 					var data = JSON.parse(e.data);
 					var model = ENDPOINT_TO_MODEL_MAP[localStorage.getItem('server') + data.endpoint];
 
-					console.log(e);
-
 					// Since actually returning a 500 for unexpected errors on the backend
 					// doesn't allow us to send any payload describing what the error actually 
 					// was, we send 200 and attach an error field to the payload with more info.

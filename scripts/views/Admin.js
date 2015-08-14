@@ -32,10 +32,11 @@ define([
 			View.prototype.initialize.call(this);
 			this._updateDisplay();
 
-			$('input[name]', this.el).on('change', this._onInputChange.bind(this));
-			this._latNode.addEventListener('change', this._onCoordinatesChange.bind(this));
-			this._lngNode.addEventListener('change', this._onCoordinatesChange.bind(this));
+			//$('input[name]', this.el).on('change', this._onInputChange.bind(this));
+			//this._latNode.addEventListener('change', this._onCoordinatesChange.bind(this));
+			//this._lngNode.addEventListener('change', this._onCoordinatesChange.bind(this));
 			this.settingsModel.on('change', this._onSettingsModelChange.bind(this))
+			this._saveLocationNode.addEventListener('click', this._onSaveLocationNodeClick.bind(this));
 
 			// Dev Tools
 			this._simulateGeohopperLocationNameNode.value = 'Home';
@@ -45,6 +46,19 @@ define([
 
 		_onSettingsModelChange: function(data) {
 			this._updateDisplay();
+		},
+
+		_onSaveLocationNodeClick: function() {
+			this.settingsModel.save({
+				street: this._streetNode.value,
+				city: this._cityNode.value,
+				state: this._stateNode.value,
+				zip: this._zipNode.value,
+				coordinates: [
+					this._lngNode.value || 0,
+					this._latNode.value || 0
+				]
+			}, {patch: true});
 		},
 
 		_onCoordinatesChange: function() {
