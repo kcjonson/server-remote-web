@@ -46,8 +46,6 @@ require([
 	var navigation;
 	var header;
 
-
-
 	var viewsNode = $('.views')
 	var navigationNode = $('.navigation')
 	var headerNode = $('.header')
