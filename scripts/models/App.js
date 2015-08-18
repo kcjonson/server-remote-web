@@ -21,16 +21,58 @@ define([
 ){
 
 
-	var MODEL_CONSTRUCTORS = {
-		'alarmsModel': AlarmsModel,
-		'devicesModel': DevicesModel,
-		'usersModel': UsersModel,
-		'actionsModel': ActionsModel,
-		'settingsModel': SettingsModel,
-		'weatherModel': WeatherModel
+	// App Data
+	//
+	// Data Sources have three main states:
+	// - Loaded: The inital load completed successfully at least once
+	// - Disabled: The server reported that the endpoint is disabled
+	// - New (implicit): If the source is neither loaded or disabled
+	//		we just assume that we have not heard back yet.
+
+
+
+	var DATA_SOURCES =  {
+		'ACTIONS': {
+			name: 'actions',
+			id: 'ACTIONS',
+			constructor: ActionsModel,
+			enabledProperty: 'actionsEnabled'
+		},
+		'ALARMS': {
+			name: 'alarms',
+			id: 'ALARMS',
+			constructor: AlarmsModel,
+			enabledProperty: 'alarmsEnabled'
+		},
+		'DEVICES': {
+			name: 'devices',
+			id: 'DEVICES',
+			constructor: DevicesModel,
+			enabledProperty: 'devicesEnabled'
+		},
+		'SETTINGS': {
+			name: 'settings',
+			id: 'SETTINGS',
+			constructor: SettingsModel,
+			enabledProperty: 'settingsEnabled'
+		},
+		'USERS': {
+			name: 'users',
+			id: 'USERS',
+			constructor: UsersModel,
+			enabledProperty: 'usersEnabled'
+		},
+		'WEATHER': {
+			name: 'weather',
+			id: 'WEATHER',
+			constructor: WeatherModel,
+			enabledProperty: 'weatherEnabled'
+		}
 	}
 
-	var ENDPOINT_TO_MODEL_MAP = {};
+	// Allows us to map data returning from the
+	// backend to the appropriate model.
+	var ENDPOINT_TO_SOUCE_MAP = {};
 
 
 	var AppModel = function(options){
@@ -38,17 +80,25 @@ define([
 		this.initialize.apply(this, arguments);
 	};
 
+
+
 	_.extend(AppModel.prototype, Backbone.Events, {
 
+		// So, since we're streaming the results, and we want them
+		// as fast as possible, we're not going to wait for the settings
+		// to load, which will tell us exactly what services are available.
+		// We're just going to fire off requests for everything, then
+		// do our best to make sense of it all later.
 
 		initialize: function () {
-			for (var key in MODEL_CONSTRUCTORS) {
-				if (MODEL_CONSTRUCTORS.hasOwnProperty(key)) {
-					this[key] = new MODEL_CONSTRUCTORS[key]();
-					this[key].on("all", this._onModelAll.bind(this));
-					ENDPOINT_TO_MODEL_MAP[this[key].url()] = this[key];
-				};
-			}
+			Object.keys(DATA_SOURCES).forEach(function(key){
+				var dataSource = DATA_SOURCES[key];
+				dataSource.model = new dataSource.constructor();
+				this[dataSource.name + 'Model'] = dataSource.model;  // TODO: Replace with getter
+				dataSource.model.on("all", this._onModelAll.bind(this));
+				ENDPOINT_TO_SOUCE_MAP[dataSource.model.url()] = dataSource;
+			}.bind(this));
+			DATA_SOURCES.SETTINGS.model.on('change', this._onSettingsChange.bind(this))
 		},
 
 		fetch: function(args) {
@@ -61,11 +111,10 @@ define([
 				// Model Data Event
 				// On first load we're going to stream the whole payload from 
 				// all the various models that we need, then close the connection.
-				var modelsLoaded = 0;
-				var modelsToLoad = Object.keys(MODEL_CONSTRUCTORS).length;
 				this._eventModelDataSourceListener = this._eventModelDataSource.addEventListener('modeldata', function(e) {
 					var data = JSON.parse(e.data);
-					var model = ENDPOINT_TO_MODEL_MAP[localStorage.getItem('server') + data.endpoint];
+					var dataSource = ENDPOINT_TO_SOUCE_MAP[localStorage.getItem('server') + data.endpoint]
+					var model = dataSource.model;
 
 					// Since actually returning a 500 for unexpected errors on the backend
 					// doesn't allow us to send any payload describing what the error actually 
@@ -73,27 +122,30 @@ define([
 					if (data.status === 200) {
 						if (data.error && data.endpoint) {
 							console.error('The data api encountered an error with endpoint ' + data.endpoint + ': ' + data.error)
+							this.trigger('error', model)
+							this.trigger('error:' + model.name , model);
 						} else {
 							model.set(data.payload);
-							modelsLoaded += 1;
-							if (modelsLoaded == modelsToLoad) {
-								this.trigger('sync:all');  // Very important, main trigger for App startup!
-								this._eventModelDataSource.removeEventListener('modeldata', this._eventModelDataSourceListener);
+							dataSource.loaded = true;
+							this.trigger('load', model)
+							this.trigger('load:' + model.name , model);
+							
 
-								// Model Push Event
-								// We're leaving the same connection open that we initally use
-								// and just listening to push events that contain partial data.
-								// Backbone is doing the hard work and doing the merge and firing
-								// the correct change events (if applicable) for us.
-								this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(e) {
-									var data = JSON.parse(e.data);
-									var model = ENDPOINT_TO_MODEL_MAP[localStorage.getItem('server') + data.endpoint];
-									model.set(data.payload, {remove: false});
-								}.bind(this), false);
-							};
+							// Model Push Event
+							// We're leaving the same connection open that we initally use
+							// and just listening to push events that contain partial data.
+							// Backbone is doing the hard work and doing the merge and firing
+							// the correct change events (if applicable) for us.
+							this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(e) {
+								var data = JSON.parse(e.data);
+								var model = ENDPOINT_TO_SOUCE_MAP[localStorage.getItem('server') + data.endpoint].model;
+								model.set(data.payload, {remove: false});
+							}.bind(this), false);
 						}
 					} else {
 						console.error('The data api recieved an error code: ' + data.status);
+						this.trigger('error', model)
+						this.trigger('error:' + model.name , model);
 					}
 				}.bind(this), false);
 
@@ -107,7 +159,6 @@ define([
 					this._eventModelDataSource.close();
 					this._eventModelDataSource = undefined;
 				}.bind(this), false);
-
 			} else if (this._eventModelDataSource) {
 				console.log('Event Source Still Active');
 			} else {
@@ -120,19 +171,51 @@ define([
 					this.settingsModel.fetch(args),
 					this.weatherModel.fetch(args)
 				).done(function(){
-					this.trigger('sync:all');
+					this.trigger('load:all');
 				}.bind(this))
 			}
 		},
 
+		require: function(dataSources) {
+			return $.when.apply($, dataSources.map(function(dataSource){
+				var sourceDeferred = $.Deferred();
+				if (dataSource.disabled || dataSource.loaded) {
+					sourceDeferred.resolve(dataSource.model);
+				} else {
+					var n = dataSource.name;
+					this.once('load:'+n+' disable:'+n+' error:'+n, function(){
+						sourceDeferred.resolve(dataSource.model)
+					});
+				};
+				return sourceDeferred.promise();
+			}.bind(this)));
+		},
+
+		_onSettingsChange: function() {
+			// Views are listening to see if a data source that they require
+			// is disabled so they don't keep waiting for data that will never come.
+			Object.keys(DATA_SOURCES).forEach(function(key){
+				var dataSource = DATA_SOURCES[key];
+				var enabled = DATA_SOURCES.SETTINGS.model.get(dataSource.enabledProperty);
+				if (dataSource.enabled !== enabled) {
+					if (enabled === false) {
+						this.trigger('disable:' + dataSource.name, dataSource.model);
+					}
+					dataSource.enabled = enabled;
+				}
+			}.bind(this));
+		},
+
 		_onModelAll: function(eventName) {
-			console.log('_onModelAll', eventName, arguments);
+			//console.log('_onModelAll', eventName, arguments);
 			// Proxy Events From Models
 			this.trigger(eventName, arguments);
 		}
 
 	});
 
+
+	AppModel.sources = DATA_SOURCES;
 
 	return AppModel;
 

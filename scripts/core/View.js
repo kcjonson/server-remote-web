@@ -1,7 +1,7 @@
 define([
 	'jquery',
 	'underscore',
-	'backbone',
+	'backbone'
 ], function(
 	$,
 	_,
@@ -15,6 +15,20 @@ define([
 
 		initialize: function(args) {
 			this._initializeTemplate();
+
+			// dataSources allows us to wait for the inital load of 
+			// various models on the main app data source.  The _onDataLoaded
+			// function will be run when all the data sources have been
+			// Loaded, Disabled, or encountered and Error.
+			if (args && args.appModel && this.dataSources) {
+				this.dataLoaded = false;
+				args.appModel.require(this.dataSources).then(function(){
+					this.trigger('data-loaded');
+					this.dataLoaded = true;
+					if (this._updateDisplay) {this._updateDisplay()}
+					if (this._onDataLoaded) {this._onDataLoaded()}
+				}.bind(this));
+			}
 		},
 
 		_initializeTemplate: function() {
@@ -49,6 +63,9 @@ define([
 			return this;
 		},
 
+		_updateDisplay: function() {},
+
+		_onDataLoaded: function() {}
 
 		
 	});

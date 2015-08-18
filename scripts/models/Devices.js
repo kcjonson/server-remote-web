@@ -7,6 +7,7 @@ define([
 ){
 	
 	return Collection.extend({
+		name: 'devices',
 
 		url: function() {
 			return localStorage.getItem('server') + 'api/devices'

@@ -6,6 +6,7 @@ define([
 
 
 	return Model.extend({
+		name: 'settings',
 		idAttribute: '_id',
 		urlRoot: localStorage.getItem('server') + 'api/settings'
 

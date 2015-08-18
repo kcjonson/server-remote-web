@@ -6,6 +6,7 @@ define([
 
 	
 	return Model.extend({
+		name: 'Action',
 		urlRoot: localStorage.getItem('server') + 'api/actions',
 		idAttribute: '_id',
 		execute: function() {

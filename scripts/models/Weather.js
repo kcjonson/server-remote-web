@@ -43,6 +43,7 @@ define([
 
 
 	return Model.extend({
+		name: 'weather',
 		idAttribute: '_id',
 		urlRoot: localStorage.getItem('server') + 'api/weather',
 

@@ -60,7 +60,7 @@ define([
 		},
 
 		_getCheckins: function(userModel) {
-			console.log(userModel)
+			//console.log(userModel)
 			$.ajax({
 				url: localStorage.getItem('server') + 'api/users/' + userModel.get('_id') + '/checkins',
 				success: function(response){
@@ -93,7 +93,7 @@ define([
 				this._chartNode.appendChild(labelNode);
 
 
-				 console.log(labelLeft, labelWidth, _createDateString(labelDate))
+				//console.log(labelLeft, labelWidth, _createDateString(labelDate))
 
 
 			}
@@ -101,7 +101,7 @@ define([
 		},
 
 		_displayCheckinsForUser: function(userModel, checkins) {
-			console.log('Displaying Checkins For User ----------------------------------------')
+			//console.log('Displaying Checkins For User ----------------------------------------')
 			//var isHome = checkins[0].name === 'Home' && checkins[0].action === 'ENTER';
 
 			var checkinDate,  	// Date of current checkin interation

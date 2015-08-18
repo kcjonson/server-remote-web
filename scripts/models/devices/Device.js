@@ -6,7 +6,7 @@ define([
 
 
 	return Model.extend({
-
+		name: 'Device',
 		idAttribute: "_id",
 
 

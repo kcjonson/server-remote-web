@@ -49,7 +49,7 @@ define([
 		},
 
 		_updateDisplay: function() {
-			console.log('change', this.userModel);
+			//console.log('change', this.userModel);
 
 			if (has('screen-large')) {
 				$(this._iconNode).addClass('hidden');

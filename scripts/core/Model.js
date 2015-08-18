@@ -9,6 +9,11 @@ define([
 	return Backbone.Model.extend({
 
 		initialize: function() {
+
+			if (!this.name) {
+				throw new Error("Models must have name attribute");
+			}
+
 			this.on('error', function(collection, res, options){
 				if (res.status !== 200) {
 					errorUtil.show(res.responseText || res.statusText || res.status);
