@@ -134,6 +134,7 @@ define([
 			this._updateDevicesDisplay();
 			this._addActions();
 			this._updateWeatherDisplay();
+			this._updateAlarmsDisplay();
 		},
 
 

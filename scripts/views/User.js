@@ -53,10 +53,12 @@ define([
 	// Private Functions
 
 		_updateDisplay: function() {
-			this._firstNameNode.value = this.currentUserModel.get('name').first;
-			this._lastNameNode.value = this.currentUserModel.get('name').last;
-			this._indigoUsernameNode.value = this.currentUserModel.get('accounts').indigo;
-			this._geohopperAccountNode.value = this.currentUserModel.get('accounts').geohopper;
+			if (this.currentUserModel.get('name')) {
+				this._firstNameNode.value = this.currentUserModel.get('name').first;
+				this._lastNameNode.value = this.currentUserModel.get('name').last;
+				this._indigoUsernameNode.value = this.currentUserModel.get('accounts').indigo;
+				this._geohopperAccountNode.value = this.currentUserModel.get('accounts').geohopper;
+			}
 		},
 
 		_updateCheckins: function() {

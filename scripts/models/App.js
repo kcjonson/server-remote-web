@@ -23,6 +23,8 @@ define([
 
 	// App Data
 	//
+	//	TODO: Make this a global singleton
+	//
 	// Data Sources have three main states:
 	// - Loaded: The inital load completed successfully at least once
 	// - Disabled: The server reported that the endpoint is disabled
@@ -30,7 +32,7 @@ define([
 	//		we just assume that we have not heard back yet.
 
 
-
+	// TODO: Load these dynamically ... 
 	var DATA_SOURCES =  {
 		'ACTIONS': {
 			name: 'actions',
@@ -125,6 +127,7 @@ define([
 							this.trigger('error', model)
 							this.trigger('error:' + model.name , model);
 						} else {
+							console.log('loaded:', model.name)
 							model.set(data.payload);
 							dataSource.loaded = true;
 							this.trigger('load', model)
@@ -179,6 +182,7 @@ define([
 		require: function(dataSources) {
 			return $.when.apply($, dataSources.map(function(dataSource){
 				var sourceDeferred = $.Deferred();
+				console.log('waitinf for', dataSource.name)
 				if (dataSource.disabled || dataSource.loaded) {
 					sourceDeferred.resolve(dataSource.model);
 				} else {
