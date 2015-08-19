@@ -3,15 +3,13 @@ define([
 	'underscore',
 	'backbone',
 	'app/core/View',
-	'text!./User.html',
-	'../util/CurrentUser'
+	'text!./User.html'
 ], function(
 	$,
 	_,
 	Backbone,
 	View,
-	templateString,
-	CurrentUser
+	templateString
 ){
 	
 
@@ -26,34 +24,28 @@ define([
 		fetchData: false,
 
 		initialize: function(args) {
-			this.currentUserModel = CurrentUser.getModel();
 			View.prototype.initialize.call(this);
-
-
-			this.currentUserModel.on("change", this._onCurrentUserModelChange.bind(this));
+			this.usersModel = args.appModel.usersModel;
+			this.usersModel.on("change add remove", this._onUsersModelChange.bind(this));
 			this._updateDisplay();
 		},
 
-
-
-
-		_onCurrentUserModelChange: function () {
+		_onUsersModelChange: function () {
+			this.currentUserModel = this.usersModel.getCurrent();
 			this._updateDisplay();
 		},
 
 		show: function() {
 			View.prototype.show.call(this);
-			this._updateCheckins();
 		},
-
-
 
 
 
 	// Private Functions
 
 		_updateDisplay: function() {
-			if (this.currentUserModel.get('name')) {
+			if (this.currentUserModel&& this.currentUserModel.get('name')) {
+				this._updateCheckins();
 				this._firstNameNode.value = this.currentUserModel.get('name').first;
 				this._lastNameNode.value = this.currentUserModel.get('name').last;
 				this._indigoUsernameNode.value = this.currentUserModel.get('accounts').indigo;

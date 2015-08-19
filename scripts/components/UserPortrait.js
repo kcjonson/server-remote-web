@@ -11,13 +11,19 @@ define([
 		// Init
 		name: 'UserPortrait',
 		tagName: "div",
-		templateString: "<span class='user' data-attach-point='_userNode'>Hello</span>",
+		templateString: "<span class='user' data-attach-point='_userNode'></span>",
 
 		initialize: function(args) {
-			this.userModel = args.userModel;
 			View.prototype.initialize.call(this);
-			this._updateDisplay();
-			this.userModel.on("change", this._onUserModelChange.bind(this));
+			this.setModel(args.userModel);
+		},
+
+		setModel: function(model) {
+			this.userModel = model;
+			if (this.userModel) {
+				this.userModel.on("change", this._onUserModelChange.bind(this));
+				this._updateDisplay();
+			}
 		},
 
 		_onUserModelChange: function() {

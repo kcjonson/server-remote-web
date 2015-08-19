@@ -87,14 +87,8 @@ define([
 		_onSuccess: function(userData) {
 			this._setDisabled(false)
 			//console.log('Login._onSuccess()');
+			this.router.navigate('', {trigger: true})
 			CurrentUser.set(userData);
-			this.appModel.once("sync:all", function(){
-				setTimeout(function(){
-					this.router.navigate('dashboard', {trigger: true})
-				}.bind(this), 1000)
-			}.bind(this));
-			this.appModel.fetch({});
-
 		},
 
 		_onError: function(error) {

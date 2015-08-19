@@ -96,7 +96,6 @@ define([
 	// Data Event Handlers
 
 		_onDataLoaded: function() {
-			console.log('loaded')
 			this._updateDisplay();
 			this.alarmsModel.on('change add remove reset sort destroy', this._onAlarmsModelChange.bind(this));
 			this.devicesModel.on('change', _.bind(this._onDevicesModelChange, this));
@@ -145,9 +144,12 @@ define([
 		},
 
 		_addAction: function(actionModel) {
-			this._actionViews[actionModel.get('_id')] = new Action({
-				model: actionModel
-			}).placeAt(this._actionsNode);
+			if (!this._actionViews[actionModel.get('_id')]) {
+				this._actionViews[actionModel.get('_id')] = new Action({
+					model: actionModel
+				}).placeAt(this._actionsNode);
+			}
+			$(this._actionsSectionNode).removeClass('hidden');
 		},
 
 
@@ -223,7 +225,7 @@ define([
 
 		_updateWeatherDisplay: function() {
 			//console.log(Data.sources.WEATHER, Data.sources.WEATHER.loaded);
-			if (Data.sources.WEATHER.loaded === true) {
+			if (Data.sources.WEATHER.loaded === true && this._weatherConditionViews.worst) {
 				var todaysForecast = this.weatherModel.get('todaysForecast')
 				this._weatherConditionViews.worst.setData(this.weatherModel.get('hourlyWorst'), todaysForecast);
 				this._weatherConditionViews.now.setData(this.weatherModel.get('currently'), todaysForecast);

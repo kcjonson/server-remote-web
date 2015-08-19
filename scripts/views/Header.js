@@ -23,12 +23,13 @@ define([
 		shown: true,
 
 		initialize: function(args) {
-			this.router = args.router;	
+			this.router = args.router;
+			this.appModel = args.appModel;
+			this.usersModel = this.appModel.usersModel;
 			this._initializeTemplate();
 
 			this._userPortrait = new UserPortrait({
-				el: this._userNode,
-				userModel: CurrentUser.getModel()
+				el: this._userNode
 			});
 
 			this.router.on("route", _.bind(function(route, params) {
@@ -39,6 +40,8 @@ define([
 			this.router.on('hide:header', this.hide.bind(this));
 
 			this._userNode.addEventListener('click', this._onUserNodeClick.bind(this));
+
+			this.usersModel.on('change add remove', this._onUsersModelChange.bind(this))
 
 		},
 
@@ -80,6 +83,10 @@ define([
 
 		_onUserNodeClick: function() {
 			this.router.navigate('user', {trigger: true});
+		},
+
+		_onUsersModelChange: function() {
+			this._userPortrait.setModel(this.usersModel.getCurrent());
 		}
 
 

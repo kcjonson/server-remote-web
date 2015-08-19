@@ -30,7 +30,8 @@ require([
 	'app/util/CurrentUser',
 	'app/util/Error',
 	'app/util/Location',
-	'app/util/Detect'
+	'app/util/Detect',
+	'app/util/Cookie'
 ], function(
 	Router,
 	AppModel,
@@ -39,7 +40,8 @@ require([
 	CurrentUser,
 	ErrorUtil,
 	LocationUtil,
-	Detect
+	Detect,
+	Cookie
 ){
 
 	var router;
@@ -54,8 +56,6 @@ require([
 
 // Startup
 
-
-	
 
 	//$.ajaxSetup({timeout:12000});
 	var appModel = new AppModel();
@@ -86,11 +86,15 @@ require([
 	//localStorage.removeItem('server')
 	var server = localStorage.getItem('server') || null;
 
-
 	if (server && server.length > 8) {
-		$('body').addClass('loaded');
 		_startHistory();
+	} else {
+		_startHistory();
+		router.navigate('setup', {trigger: true});
 	}
+	$('body').addClass('loaded');
+
+
 
 	// if (server && server.length > 2 && window.location.pathname !== '/dashboard/setup') {
 

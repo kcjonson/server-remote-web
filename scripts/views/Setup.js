@@ -2,7 +2,7 @@ define([
 	'jquery',
 	'app/core/View',
 	'text!./Setup.html',
-	'app/util/CurrentUser',
+	'app/util/CurrentUser'
 ], function(
 	$,
 	View,
@@ -82,7 +82,6 @@ define([
 						localStorage.setItem('server', url);
 						this._updateDisplay();
 					} else {
-						// TODO: Redirect
 						this._serverAddressStatusNode.innerHTML = '';
 						this.router.navigate('dashboard', {trigger: true})
 					}

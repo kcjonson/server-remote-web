@@ -98,7 +98,9 @@ define([
 				dataSource.model = new dataSource.constructor();
 				this[dataSource.name + 'Model'] = dataSource.model;  // TODO: Replace with getter
 				dataSource.model.on("all", this._onModelAll.bind(this));
-				ENDPOINT_TO_SOUCE_MAP[dataSource.model.url()] = dataSource;
+				var url = dataSource.model.url();
+				url = url.replace(localStorage.getItem('server'), '');
+				ENDPOINT_TO_SOUCE_MAP[url] = dataSource;
 			}.bind(this));
 			DATA_SOURCES.SETTINGS.model.on('change', this._onSettingsChange.bind(this))
 		},
@@ -115,40 +117,44 @@ define([
 				// all the various models that we need, then close the connection.
 				this._eventModelDataSourceListener = this._eventModelDataSource.addEventListener('modeldata', function(e) {
 					var data = JSON.parse(e.data);
-					var dataSource = ENDPOINT_TO_SOUCE_MAP[localStorage.getItem('server') + data.endpoint]
-					var model = dataSource.model;
+					var dataSource = ENDPOINT_TO_SOUCE_MAP[data.endpoint];
+					if (dataSource) {
+						var model = dataSource.model;
 
-					// Since actually returning a 500 for unexpected errors on the backend
-					// doesn't allow us to send any payload describing what the error actually 
-					// was, we send 200 and attach an error field to the payload with more info.
-					if (data.status === 200) {
-						if (data.error && data.endpoint) {
-							console.error('The data api encountered an error with endpoint ' + data.endpoint + ': ' + data.error)
+						// Since actually returning a 500 for unexpected errors on the backend
+						// doesn't allow us to send any payload describing what the error actually 
+						// was, we send 200 and attach an error field to the payload with more info.
+						if (data.status === 200) {
+							if (data.error && data.endpoint) {
+								console.error('The data api encountered an error with endpoint ' + data.endpoint + ': ' + data.error)
+								this.trigger('error', model)
+								this.trigger('error:' + model.name , model);
+							} else {
+								//console.log('loaded:', model.name)
+								model.set(data.payload);
+								dataSource.loaded = true;
+								this.trigger('load', model)
+								this.trigger('load:' + model.name , model);
+								
+
+								// Model Push Event
+								// We're leaving the same connection open that we initally use
+								// and just listening to push events that contain partial data.
+								// Backbone is doing the hard work and doing the merge and firing
+								// the correct change events (if applicable) for us.
+								this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(e) {
+									var data = JSON.parse(e.data);
+									var model = ENDPOINT_TO_SOUCE_MAP[localStorage.getItem('server') + data.endpoint].model;
+									model.set(data.payload, {remove: false});
+								}.bind(this), false);
+							}
+						} else {
+							console.error('The data api recieved an error code: ' + data.status);
 							this.trigger('error', model)
 							this.trigger('error:' + model.name , model);
-						} else {
-							console.log('loaded:', model.name)
-							model.set(data.payload);
-							dataSource.loaded = true;
-							this.trigger('load', model)
-							this.trigger('load:' + model.name , model);
-							
-
-							// Model Push Event
-							// We're leaving the same connection open that we initally use
-							// and just listening to push events that contain partial data.
-							// Backbone is doing the hard work and doing the merge and firing
-							// the correct change events (if applicable) for us.
-							this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(e) {
-								var data = JSON.parse(e.data);
-								var model = ENDPOINT_TO_SOUCE_MAP[localStorage.getItem('server') + data.endpoint].model;
-								model.set(data.payload, {remove: false});
-							}.bind(this), false);
 						}
 					} else {
-						console.error('The data api recieved an error code: ' + data.status);
-						this.trigger('error', model)
-						this.trigger('error:' + model.name , model);
+						console.error('The data api encountered an unknown error ');
 					}
 				}.bind(this), false);
 
@@ -182,7 +188,6 @@ define([
 		require: function(dataSources) {
 			return $.when.apply($, dataSources.map(function(dataSource){
 				var sourceDeferred = $.Deferred();
-				console.log('waitinf for', dataSource.name)
 				if (dataSource.disabled || dataSource.loaded) {
 					sourceDeferred.resolve(dataSource.model);
 				} else {

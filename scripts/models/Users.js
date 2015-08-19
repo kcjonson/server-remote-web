@@ -1,9 +1,11 @@
 define([
 	'app/core/Collection',
-	'app/models/users/User'
+	'app/models/users/User',
+	'app/util/Cookie'
 ], function(
 	Collection,
-	UserModel
+	UserModel,
+	Cookie
 ){
 
 	return Collection.extend({
@@ -11,7 +13,13 @@ define([
 		url: function() {
 			return localStorage.getItem('server') + 'api/users'
 		},
-		model: UserModel
+		model: UserModel,
+
+		getCurrent: function() {
+			var userId = Cookie.get('remote.userId');
+			var userModel = this.get(userId);
+			return userModel
+		}
 	
 	});
 
