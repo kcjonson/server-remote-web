@@ -21,6 +21,7 @@
 @import './views/Login.less';
 @import './views/Error.less';
 @import './views/User.less';
+@import './views/Setup.less';
 
 
 
@@ -106,9 +107,18 @@
 				}
 			}
 
-			> .navigation {
-				-webkit-order: 2;
-				order: 2;
+
+
+			@media (max-width: @screen-large) {
+				> .navigation {
+					position: fixed;
+					bottom: 0;
+					width: 100%;
+				}
+
+				> .main > .views {
+					padding-bottom: 65px;
+				}
 			}
 
 			@media (min-width: @screen-large) {
