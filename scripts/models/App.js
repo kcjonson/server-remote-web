@@ -142,10 +142,17 @@ define([
 								// and just listening to push events that contain partial data.
 								// Backbone is doing the hard work and doing the merge and firing
 								// the correct change events (if applicable) for us.
-								this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(e) {
-									var data = JSON.parse(e.data);
-									var model = ENDPOINT_TO_SOUCE_MAP[localStorage.getItem('server') + data.endpoint].model;
-									model.set(data.payload, {remove: false});
+								this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(pushEvent) {
+									if (pushEvent && pushEvent.data) {
+										var pushData = JSON.parse(pushEvent.data);
+										var pushEndpoint = ENDPOINT_TO_SOUCE_MAP[localStorage.getItem('server') + pushData.endpoint];
+										if (pushEndpoint) {
+											pushEndpoint.model.set(pushData.payload, {remove: false});
+										};
+									} else {
+										console.error('There was an error with the modelpush payload')
+										// TODO: Further error handling?
+									}
 								}.bind(this), false);
 							}
 						} else {

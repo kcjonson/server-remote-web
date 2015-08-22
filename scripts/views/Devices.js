@@ -2,22 +2,25 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
+	'app/core/View',
 	'text!./Devices.html',
 	'./devices/Category'
 ], function(
 	$,
 	_,
 	Backbone,
+	View,
 	templateString,
 	Category
 ){
 
 
-	return Backbone.View.extend({
+	return View.extend({
 
 
 	// Init
 		name: 'Devices',
+		templateString: templateString,
 		fetchData: true,
 		attributes: {
 			'class': 'scrollable'
@@ -25,10 +28,10 @@ define([
 		_categoryViews: {},
 
 		initialize: function(args) {
-			this._initializeTemplate();
 			this.router = args.router;
 			this.appModel = args.appModel;
 			this.devicesModel = args.appModel.devicesModel;
+			View.prototype.initialize.call(this, args);
 
 			this._addDevices();
 
@@ -37,37 +40,6 @@ define([
 
 			$(this._typeInput).on("change", _.bind(this._onGroupingChange, this));
 			$(this._locationInput).on("change", _.bind(this._onGroupingChange, this));
-		},
-
-		
-		_initializeTemplate: function() {
-		
-			// Consume template string
-			if (templateString) {
-				var templateDom = _.template(templateString);
-				this.$el.html(templateDom);
-				this.$el.addClass(this.name);
-			};
-			
-			// Collect attach points
-			if (this.$el) {
-				$('[data-attach-point]', this.$el).each(_.bind(function(index, attachPointNode){
-					var attachPointName = attachPointNode.attributes['data-attach-point'].value;
-					this[attachPointName] = attachPointNode;
-				}, this));
-			};
-			
-		},
-
-
-	// Public
-
-		show: function() {
-			this.$el.removeClass('hidden');
-		},
-
-		hide: function() {
-			this.$el.addClass('hidden');
 		},
 
 

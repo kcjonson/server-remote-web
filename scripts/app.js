@@ -94,7 +94,7 @@ require([
 		_startHistory();
 		router.navigate('setup', {trigger: true});
 	}
-	$('body').addClass('loaded');
+
 
 
 

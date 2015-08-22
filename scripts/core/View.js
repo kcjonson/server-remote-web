@@ -27,6 +27,7 @@ define([
 					this.dataLoaded = true;
 					if (this._updateDisplay) {this._updateDisplay()}
 					if (this._onDataLoaded) {this._onDataLoaded()}
+					$('body').addClass('loaded');
 				}.bind(this));
 			}
 		},
@@ -51,6 +52,9 @@ define([
 		},
 
 		show: function(params) {
+			if (!this.dataSources) {
+				$('body').addClass('loaded');
+			}
 			this.$el.removeClass('hidden');
 		},
 

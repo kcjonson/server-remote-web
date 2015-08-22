@@ -48,8 +48,12 @@ define([
 				this._updateCheckins();
 				this._firstNameNode.value = this.currentUserModel.get('name').first;
 				this._lastNameNode.value = this.currentUserModel.get('name').last;
-				this._indigoUsernameNode.value = this.currentUserModel.get('accounts').indigo;
-				this._geohopperAccountNode.value = this.currentUserModel.get('accounts').geohopper;
+
+				var accounts = this.currentUserModel.get('accounts');
+				if (accounts) {
+					this._indigoUsernameNode.value = this.currentUserModel.get('accounts').indigo;
+					this._geohopperAccountNode.value = this.currentUserModel.get('accounts').geohopper;
+				}
 			}
 		},
 
