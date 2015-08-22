@@ -21,7 +21,7 @@ define([
 	// Init
 		name: 'User',
 		templateString: templateString,
-		fetchData: false,
+		fetchData: true,
 
 		initialize: function(args) {
 			View.prototype.initialize.call(this);

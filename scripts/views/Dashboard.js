@@ -31,6 +31,9 @@ define([
 		_actionViews: {},
 		_weatherConditionViews: {},
 		templateString: templateString,
+		attributes: {
+			'class': 'scrollable'
+		},
 
 		dataSources: [
 			Data.sources.ALARMS,

@@ -33,7 +33,11 @@ define([
 		},
 
 		_updateDisplay: function() {
-			this._serverAddressNode.value = localStorage.getItem('server')
+			var serverAddress = localStorage.getItem('server');
+			if (!serverAddress) {
+				serverAddress = window.location.origin;
+			}
+			this._serverAddressNode.value = serverAddress;
 			$(this._createUserNode).toggleClass('hidden', localStorage.getItem('server'));
 		},
 
