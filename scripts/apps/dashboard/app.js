@@ -21,6 +21,7 @@ require.config({
 });
 
 require([
+	'jquery',
 	'app/Router',
 	'app/models/App',
 	'app/views/Navigation',
@@ -30,6 +31,7 @@ require([
 	'app/util/Location',
 	'app/util/Detect'
 ], function(
+	$,
 	Router,
 	AppModel,
 	Navigation,
@@ -139,7 +141,12 @@ require([
 	
 	// Fun Hack for iOS
 	// I totally forgot what this does. -KCJ
-	document.addEventListener("touchstart", function() {},false);
+	//document.addEventListener("touchstart", function() {},false);
+
+$('body').on('touchmove', function (e) {
+if (!$('.scrollable').has($(e.target)).length) e.preventDefault();
+});
+
 
 	// Tap highlight should not show once scroll starts. 
 	// This appears only on real devices, not chrome simulation mode.
