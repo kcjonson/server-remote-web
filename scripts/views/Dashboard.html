@@ -1,0 +1,62 @@
+
+<div class='section alarm hidden' data-attach-point='_alarmSectionNode'>
+	<h2>
+		<span>Alarm Clock</span>
+	</h2>
+	<div class='details'>
+		<div class='time' data-attach-point='_alarmTimeNode'></div>
+		<div class='status' data-attach-point='_alarmStatusNode'>
+			<div class='isOn fa fa-check-square-o' data-attach-point='_alarmIsOnNode'></div>
+			<div class='isRunning fa fa-refresh fa-spin' data-attach-point='_alarmIsRunningNode'></div>
+		</div>
+	</div>
+</div>
+
+<div class='section weather hidden' data-attach-point='_weatherSectionNode'>
+	<h2>
+		<span>Weather</span>
+	</h2>
+	<ol data-attach-point='_weatherConditionsNode'></ol>
+</div>
+
+<div class='section users hidden'  data-attach-point='_usersSectionNode'>
+	<h2>
+		<span>Occupancy</span>
+	</h2>
+	<div data-attach-point='_usersNode'></div>
+</div>
+
+<div class='section devices hidden' data-attach-point='_devicesSectionNode'>
+	<h2>
+		<span>Devices</span>
+	</h2>
+	<ul class='list'>
+		<li>
+			<span class='label'>Lights</span>
+			<span class='status' data-attach-point='_numLightsOnNode'>0</span>
+		</li>
+		<li>
+			<span class='label'>Openings</span>
+			<span class='status' data-attach-point='_numOpeningsOpenNode'>0</span>
+		</li>
+		<li>
+			<span class='label'>Heaters</span>
+			<span class='status' data-attach-point='_thermostatsStatusNode'>Off</span>
+		</li>
+	</ul>
+</div>
+
+<div class='section actions hidden' data-attach-point='_actionsSectionNode'>
+	<h2>
+		<span>Actions</span>
+	</h2>
+	<ul class='list actions' data-attach-point='_actionsNode'></ul>
+</div>
+
+<!-- Non semantic hack -->
+<div class='flexboxBreak'></div>
+
+
+
+
+
