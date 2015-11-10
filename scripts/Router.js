@@ -95,7 +95,9 @@ define([
 							}
 							if (v.fetchData === true) {
 								args.appModel.fetch();
-							} 
+							} else {
+								$('body').addClass('loaded');
+							}
 							this.el.toggleClass('dark', v.darkBackground === true)
 							v.show(params);
 						}

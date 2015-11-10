@@ -26,6 +26,7 @@ define([
 		initialize: function(args) {
 			View.prototype.initialize.call(this);
 			this.usersModel = args.appModel.usersModel;
+			this.currentUserModel = this.usersModel.getCurrent();
 			this.usersModel.on("change add remove", this._onUsersModelChange.bind(this));
 			this._updateDisplay();
 		},
@@ -44,7 +45,7 @@ define([
 	// Private Functions
 
 		_updateDisplay: function() {
-			if (this.currentUserModel&& this.currentUserModel.get('name')) {
+			if (this.currentUserModel && this.currentUserModel.get('name')) {
 				this._updateCheckins();
 				this._firstNameNode.value = this.currentUserModel.get('name').first;
 				this._lastNameNode.value = this.currentUserModel.get('name').last;
