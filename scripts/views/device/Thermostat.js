@@ -43,6 +43,9 @@ define([
 		},
 
 		_updateDisplay: function() {
+
+			console.log(this.model)
+
 			// var isOn = this.model.get('hvacHeaterIsOn');
 			// this._currentTempNode.innerHTML = this.model.get('displayRawState');
 			// this._setTempNode.innerHTML = this.model.get('setpointHeat');

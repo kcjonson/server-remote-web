@@ -1,29 +1,17 @@
 define([
 	'backbone',
-	'app/util/Error'
+	'underscore',
+	'./_fetch'
 ], function(
 	Backbone,
-	errorUtil
+	_,
+	_fetch
 ){
 	
-	return Backbone.Collection.extend({
+	var Collection = Backbone.Collection.extend({});
 
-		initialize: function() {
-			this.on('error', function(collection, res, options){
-				if (res.status !== 200) {
-					errorUtil.show(res.responseText || res.statusText || res.status);
-				}
-			})
-		},
+	_.extend(Collection.prototype, _fetch);
 
-		parse: function(res, req) {
-			if (res.error) {
-				errorUtil.show(res.error);
-				delete res.error;
-			}
-			return res;
-		}
-	
-	});
+	return Collection;
 
 });

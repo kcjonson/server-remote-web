@@ -11,6 +11,7 @@ define([
 	templateString,
 	ErrorUtil
 ){
+
 	
 	return Backbone.View.extend({
 
@@ -57,25 +58,48 @@ define([
 		show: function() {
 			this.$el.removeClass('hidden');
 			$('body').addClass('loaded');
-			var error = ErrorUtil.getAll()[0];
-			var errorText = 'An unknown error occured'
-			if (error) {
-				if (typeof error == 'string') {
-					errorText = error;
-				} else if (error.statusText == 'timeout') {
-					errorText = 'The server appears to be down!'
-				} else if (error.error) {
-					errorText = error.error;
-				}
-			}
-			this._errorNode.innerHTML = errorText;
+			this._errors = [];
+			var errors = ErrorUtil.getAll() || [];
+			errors.forEach(function(err){
+				this._add(err);
+			}.bind(this));
+			ErrorUtil.on('add', function(err){
+				this._add(err);
+			}.bind(this));
 		},
 
 		hide: function() {
 			this.$el.addClass('hidden');
+			this._errorNode.innerHTML = '';
+			this._errors = [];
 		},
 
 
+
+	// Private Functions
+
+		_add: function(err) {
+
+			// Compute error text
+			var errorText = 'An unknown error occured'
+			if (err) {
+				if (typeof err == 'string') {
+					errorText = err;
+				} else if (err.statusText == 'timeout') {
+					errorText = 'The server appears to be down!'
+				} else if (err.error) {
+					errorText = err.error;
+				}
+			}
+			this._errors.push(errorText);
+
+			// TODO: Dedupe and count.
+
+			this._errorNode.innerHTML = this._errors.join(', ');
+
+		
+
+		}
 
 
 

@@ -7,11 +7,8 @@
 		<title>Remote</title>
 
 		<meta name="description" content="Home Remote">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no" />
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<meta name="robots" content="noindex,nofollow">
-
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no" >
 		<script type="text/javascript" src="/cordova.js"></script>
         
        <!-- Load Styles: Note, this must be done before loading the LESS Parser -->
@@ -34,18 +31,17 @@
 		
 
 
-
 		<!-- iOS Settings -->
 		<link rel="apple-touch-icon" href="images/apple-touch-icon-60x60">
 		<link rel="apple-touch-icon" sizes="76x76" href="images/apple-touch-icon-76x76.png">
 		<link rel="apple-touch-icon" sizes="120x120" href="images/apple-touch-icon-120x120.png">
 		<link rel="apple-touch-icon" sizes="152x152" href="images/apple-touch-icon-152x152.png">
-		<link rel="apple-touch-startup-image" href="images/apple-touch-startup-image-320x480.png">
+
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="translucent">
+
 
     </head>
-    <body class='view dashboard' style='background-color: rgb(44, 42, 42);'>
+    <body style='background-color: rgb(44, 42, 42);'>
 
 		<div class='container'>
 			<div class='main'>
@@ -68,7 +64,7 @@
 
 		
 		<!-- Load RequireJS -->
-		<script data-main="/scripts/app" src="/scripts/lib/require.js"></script>
+		<script data-main="/main-built" src="/scripts/lib/require.js"></script>
 
     </body>
 </html>

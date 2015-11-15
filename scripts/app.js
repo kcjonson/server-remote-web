@@ -58,6 +58,8 @@ require([
 
 // Startup
 
+	console.log('standalone: ', window.navigator.standalone)
+
 
 	//$.ajaxSetup({timeout:12000});
 	var appModel = new AppModel();
@@ -87,57 +89,12 @@ require([
 
 	//localStorage.removeItem('server')
 	var server = localStorage.getItem('server') || null;
-
 	if (server && server.length > 8) {
 		_startHistory();
 	} else {
 		_startHistory();
 		router.navigate('setup', {trigger: true});
 	}
-
-
-
-
-	// if (server && server.length > 2 && window.location.pathname !== '/dashboard/setup') {
-
-	// 	// Check user credentials up front.
-	// 	// Probally don't have to do this if we're handing errors
-	// 	// on all the models properly.	
-	// 	CurrentUser.authenticate(function(res){
-	// 		if (res && res.status == 401) {
-	// 			// Auth failed
-	// 			_startHistory(true);
-	// 			$('body').addClass('loaded');
-	// 			router.navigate('login', {trigger: true});
-	// 		} else if (res.users == false) {
-	// 			// No users in the DB
-	// 			_startHistory(true);
-	// 			$('body').addClass('loaded');
-	// 			router.navigate('setup', {trigger: true});
-	// 		} else if (res.error) {
-	// 			// An unhandled error occured
-	// 			_startHistory(true);
-	// 			ErrorUtil.show(res.error || res.responseText || res.statusText, router);
-	// 		} else {
-	// 			// Success
-	// 			LocationUtil.watch();
-	// 			appModel.once("sync:all", function(){
-	// 				setTimeout(function(){
-	// 					$('body').addClass('loaded');
-	// 				}.bind(this), 100)
-	// 			});
-	// 			_startHistory();
-	// 		}
-	// 	});
-	// } else {
-	// 	if (window.location.pathname == '/dashboard/setup') {
-	// 		_startHistory();
-	// 	} else {
-	// 		_startHistory(true);
-	// 		router.navigate('setup', {trigger: true});
-	// 	}
-	// 	$('body').addClass('loaded');
-	// }
 
 	function _startHistory(silent) {
 		// This needs go after things that subscribe to route
@@ -149,8 +106,6 @@ require([
 			silent: silent || false
 		});
 	}
-
-
 
 
 
@@ -175,15 +130,19 @@ require([
 
 
 // iOS Specific
-
 	
-	// Fun Hack for iOS
-	// I totally forgot what this does. -KCJ
-	//document.addEventListener("touchstart", function() {},false);
-
-$('body').on('touchmove', function (e) {
-if (!$('.scrollable').has($(e.target)).length) e.preventDefault();
-});
+	// Cancel Webkit Scroll Bounce
+	//    1. Views must add a "scrollable" class to themselves to prevent the event from being canceled
+	//    2. Even if they have declared themselves scrollable, we check to make sure the content is 
+	//       actually overflowing.  Otherwise safari bounces the whole container.
+	$('body').on('touchmove', function (e) {
+		var viewsContainer = $('.main > .views')[0];
+		var targetIsScrollable = $('.scrollable').has($(e.target)).length;
+		var viewIsOverflowing = viewsContainer.offsetHeight !== viewsContainer.scrollHeight
+		if (!targetIsScrollable || !viewIsOverflowing) {
+			e.preventDefault();
+		}
+	});
 
 
 	// Tap highlight should not show once scroll starts. 

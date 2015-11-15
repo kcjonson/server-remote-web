@@ -1,25 +1,14 @@
 define([
 	'backbone',
-	'app/util/Error'
+	'underscore',
+	'./_fetch'
 ], function(
 	Backbone,
-	errorUtil
+	_,
+	_fetch
 ){
 
-	return Backbone.Model.extend({
-
-		initialize: function() {
-
-			if (!this.name) {
-				throw new Error("Models must have name attribute");
-			}
-
-			this.on('error', function(collection, res, options){
-				if (res.status !== 200) {
-					errorUtil.show(res.responseText || res.statusText || res.status);
-				}
-			})
-		},
+	var Model =  Backbone.Model.extend({
 
 		get: function(attr) {
 			if (_.isFunction(this[attr])) {
@@ -29,13 +18,11 @@ define([
 			}
 		},
 		
-		parse: function(res, req) {
-			if (res.error) {
-				errorUtil.show(res.error);
-				delete res.error;
-			}
-			return res;
-		}
+
 	});
+
+	_.extend(Model.prototype, _fetch);
+
+	return Model;
 
 });

@@ -1,12 +1,27 @@
-define([], function(){
+define([
+	'underscore',
+	'backbone'
+], function(
+	_,
+	Backbone
+){
 	var ERRORS = [];
-	return {
+
+	var Error = {
 		show: function(error, router) {
 			router = router || this.router
-			ERRORS.push(error);
-			console.error(error);
-			if (router) {
-				router.navigate('error', {trigger: true});
+
+			if (error !== 401) {
+				ERRORS.push(error);
+				console.error(error);
+				this.trigger('add', error);
+				if (router) {
+					router.navigate('error', {trigger: true});
+				}
+			} else {
+				if (router) {
+					router.navigate('login', {trigger: true});
+				}
 			}
 		},
 		
@@ -18,4 +33,9 @@ define([], function(){
 			this.router = router;
 		}
 	}
+
+	return _.extend(Error, Backbone.Events);
+	
 });
+
+

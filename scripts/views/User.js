@@ -22,6 +22,9 @@ define([
 		name: 'User',
 		templateString: templateString,
 		fetchData: true,
+		attributes: {
+			'class': 'scrollable'
+		},
 
 		initialize: function(args) {
 			View.prototype.initialize.call(this);

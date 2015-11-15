@@ -105,6 +105,9 @@ define([
 			DATA_SOURCES.SETTINGS.model.on('change', this._onSettingsChange.bind(this))
 		},
 
+		// This is slightly misnamed, if the call for fetch happens and the stream is already open
+		// it essentially does nothing because its allreaded initiated and listening for data.
+		// the private _fetch function does a manual force.
 		fetch: function(args) {
 			if (!!window.EventSource && !this._eventModelDataSource) {
 				console.log('Starting API EventSource Stream')
@@ -169,26 +172,16 @@ define([
 				// Most routes make a call for "fetch" so there is a high chance that
 				// this will get re-attached if the connection was dropped.
 				this._eventModelDataSource.addEventListener('error', function(e) {
-					console.error('An error occured with the api data source')
-					// TODO: Use a regular get request to get real error info 
-					// we don't know what the error code is!
+					console.debug('An error occured with the api data source, initiating manual fetch')
 					this._eventModelDataSource.close();
 					this._eventModelDataSource = undefined;
+					this._fetch(args);
 				}.bind(this), false);
 			} else if (this._eventModelDataSource) {
-				console.log('Event Source Still Active');
+				console.debug('App model event source still active, ignoring fetch call');
 			} else {
-				console.log('Manually initiating fetch');
-				$.when(
-					this.alarmsModel.fetch(args),
-					this.devicesModel.fetch(args),
-					this.usersModel.fetch(args),
-					this.actionsModel.fetch(args),
-					this.settingsModel.fetch(args),
-					this.weatherModel.fetch(args)
-				).done(function(){
-					this.trigger('load:all');
-				}.bind(this))
+				// Browser does not suport EventSouce object, manually fetch.
+				this._fetch(args);
 			}
 		},
 
@@ -226,6 +219,20 @@ define([
 			//console.log('_onModelAll', eventName, arguments);
 			// Proxy Events From Models
 			this.trigger(eventName, arguments);
+		},
+
+		_fetch: function(args) {
+			console.log('Manually initiating fetch');
+			$.when(
+				this.alarmsModel.fetch(args),
+				this.devicesModel.fetch(args),
+				this.usersModel.fetch(args),
+				this.actionsModel.fetch(args),
+				this.settingsModel.fetch(args),
+				this.weatherModel.fetch(args)
+			).done(function(){
+				this.trigger('load:all');
+			}.bind(this))
 		}
 
 	});
