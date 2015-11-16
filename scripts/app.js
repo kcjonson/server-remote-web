@@ -1,27 +1,3 @@
-
-require.config({
-	paths: {
-		app: '/scripts',
-		jquery: '/scripts/lib/jquery',
-		underscore: '/scripts/lib/underscore',
-		backbone: '/scripts/lib/backbone',
-		'backbone-relational': '/scripts/lib/backbone-relational',
-		text: '/scripts/lib/text'
-	},
-	shim: {
-		underscore: {
-			exports: '_'
-		},
-		backbone: {
-			deps: ["underscore", "jquery"],
-			exports: "Backbone"
-		},
-		'backbone-relational': {
-			deps: ["backbone"]
-		}
-	}
-});
-
 require([
 	'jquery',
 	'app/Router',
@@ -57,8 +33,6 @@ require([
 
 
 // Startup
-
-	console.log('standalone: ', window.navigator.standalone)
 
 
 	//$.ajaxSetup({timeout:12000});

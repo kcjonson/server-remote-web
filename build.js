@@ -1,7 +1,7 @@
 ({
 	baseUrl: ".",
 	name: "scripts/app",
-	out: "main-built.js",
+	out: "scripts/main-built.js",
 	paths: {
 		app: 'scripts',
 		jquery: 'scripts/lib/jquery',

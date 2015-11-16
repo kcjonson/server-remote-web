@@ -140,23 +140,7 @@ define([
 								this.trigger('load:' + model.name , model);
 								
 
-								// Model Push Event
-								// We're leaving the same connection open that we initally use
-								// and just listening to push events that contain partial data.
-								// Backbone is doing the hard work and doing the merge and firing
-								// the correct change events (if applicable) for us.
-								this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(pushEvent) {
-									if (pushEvent && pushEvent.data) {
-										var pushData = JSON.parse(pushEvent.data);
-										var pushEndpoint = ENDPOINT_TO_SOUCE_MAP[localStorage.getItem('server') + pushData.endpoint];
-										if (pushEndpoint) {
-											pushEndpoint.model.set(pushData.payload, {remove: false});
-										};
-									} else {
-										console.error('There was an error with the modelpush payload')
-										// TODO: Further error handling?
-									}
-								}.bind(this), false);
+
 							}
 						} else {
 							console.error('The data api recieved an error code: ' + data.status);
@@ -167,6 +151,27 @@ define([
 						console.error('The data api encountered an unknown error ');
 					}
 				}.bind(this), false);
+
+
+				// Model Push Event
+				// We're leaving the same connection open that we initally use
+				// and just listening to push events that contain partial data.
+				// Backbone is doing the hard work and doing the merge and firing
+				// the correct change events (if applicable) for us.
+				this._eventModelPushSourceListener = this._eventModelDataSource.addEventListener('modelpush', function(pushEvent) {
+					if (pushEvent && pushEvent.data) {
+						var pushData = JSON.parse(pushEvent.data);
+						var pushEndpoint = ENDPOINT_TO_SOUCE_MAP[pushData.endpoint];
+						if (pushEndpoint && pushData.payload) {
+							console.debug('pushing data', pushData.payload);
+							pushEndpoint.model.set(pushData.payload, {remove: false});
+						};
+					} else {
+						console.error('There was an error with the modelpush payload')
+						// TODO: Further error handling?
+					}
+				}.bind(this), false);
+
 
 				// Error Handler
 				// Most routes make a call for "fetch" so there is a high chance that
@@ -231,6 +236,7 @@ define([
 				this.settingsModel.fetch(args),
 				this.weatherModel.fetch(args)
 			).done(function(){
+				// Is anything listening to this anymore? -KCJ
 				this.trigger('load:all');
 			}.bind(this))
 		}
