@@ -1,0 +1,24 @@
+{
+  "name": "server-remote-web",
+  "version": "1.0.0",
+  "description": "server-remote-web",
+  "dependencies": {},
+  "devDependencies": {
+    "del": "^2.1.0",
+    "gulp": "^3.9.0",
+    "gulp-requirejs-optimize": "^0.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kcjonson/server-remote-web.git"
+  },
+  "author": "Kevin Jonson (kcjonson@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kcjonson/server-remote-web/issues"
+  },
+  "homepage": "https://github.com/kcjonson/server-remote-web#readme"
+}

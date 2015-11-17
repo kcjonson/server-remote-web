@@ -3,7 +3,7 @@ var requirejsOptimize = require('gulp-requirejs-optimize');
 var del = require('del');
 
 
-gulp.task('default', ['build', 'copy']);
+gulp.task('default', ['build-scripts', 'build-styles', 'copy']);
 
 
 gulp.task('copy', function(){
@@ -17,17 +17,21 @@ gulp.task('copy', function(){
 		.pipe(gulp.dest('lib'));
 	gulp.src('src/fonts/**/*')
 		.pipe(gulp.dest('lib/fonts'));
-	gulp.src('src/styles/**/*')
-		.pipe(gulp.dest('lib/styles'));
 	gulp.src('src/images/**/*')
 		.pipe(gulp.dest('lib/images'));
 })
 
-gulp.task('watch', function(){
-	gulp.watch('src/**/*', ['default']);
+gulp.task('watch', ['default'], function(){
+	gulp.watch('src/scripts/**/*', ['build-js']);
+	gulp.watch('src/styles/**/*', ['build-styles']);
 });
 
-gulp.task('build', function(){
+gulp.task('build-styles', function(){
+	gulp.src('src/styles/**/*')
+		.pipe(gulp.dest('lib/styles'));
+});
+
+gulp.task('build-scripts', function(){
 	return gulp.src('src/scripts/app.js')
 		.pipe(requirejsOptimize({
 			baseUrl: ".",
