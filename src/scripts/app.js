@@ -4,7 +4,6 @@ require([
 	'app/models/App',
 	'app/views/Navigation',
 	'app/views/Header',
-	'app/util/CurrentUser',
 	'app/util/Error',
 	'app/util/Location',
 	'app/util/Detect',
@@ -15,7 +14,6 @@ require([
 	AppModel,
 	Navigation,
 	Header,
-	CurrentUser,
 	ErrorUtil,
 	LocationUtil,
 	Detect,
@@ -60,8 +58,6 @@ require([
 	// TODO: Look for a cookie set by server that 
 	// has information about the server such as the domain.
 	// write to local storage if it exists.
-
-	//localStorage.removeItem('server')
 	var server = localStorage.getItem('server') || null;
 	if (server && server.length > 8) {
 		_startHistory();

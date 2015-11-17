@@ -23,6 +23,10 @@ gulp.task('copy', function(){
 		.pipe(gulp.dest('lib/images'));
 })
 
+gulp.task('watch', function(){
+	gulp.watch('src/**/*', ['default']);
+});
+
 gulp.task('build', function(){
 	return gulp.src('src/scripts/app.js')
 		.pipe(requirejsOptimize({
