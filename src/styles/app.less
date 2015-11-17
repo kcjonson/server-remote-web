@@ -1,0 +1,147 @@
+// Third Party 
+@import './third-party/font-awesome.css';
+@import './third-party/weather-icons.css';
+
+// Core 
+@import './core/reset.css';
+@import './core/global.less';
+
+// Components
+@import './components/UserPortrait';
+
+// View Styles
+@import './views/Dashboard.less';
+@import './views/Admin.less';
+@import './views/Actions.less';
+@import './views/Devices.less';
+@import './views/Device.less';
+@import './views/Alarm.less';
+@import './views/Navigation.less';
+@import './views/Header.less';
+@import './views/Login.less';
+@import './views/Error.less';
+@import './views/User.less';
+@import './views/Setup.less';
+
+
+
+	body {
+
+		&.loaded {
+			> .container  {
+				opacity: 1;
+			}
+			> .notice.loading {
+				display: none;
+			}
+		}
+
+		> .notice.loading {
+			> svg {
+				#arc-outer,
+				#arc-inner {
+					-webkit-animation-name: PULSE;
+					-webkit-animation-duration: 2s;
+					-webkit-animation-iteration-count: infinite;
+				}
+				#arc-outer {
+					-webkit-animation-delay: .5s;
+				}
+
+				@-webkit-keyframes PULSE {
+					0%{opacity:0;}
+					90%{opacity:1;}
+					100%{opacity:0;}
+				}
+			}
+		}
+
+		> .container {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-flex-direction: column;
+			flex-direction: column;
+			height: 100vh;
+			width: 100vw;
+			overflow: hidden;
+			opacity: 0;
+			transition: opacity 0.5s;
+
+			> .main {
+				-webkit-order: 1;
+				order: 1;
+				-webkit-flex: 1 1 100%;
+				flex: 1 1 100%;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-direction: column;
+				flex-direction: column;
+
+				> .views {
+					-webkit-order: 2;
+					order: 2;
+					-webkit-flex: 1 1 100%;
+					flex: 1 1 100%;
+
+					overflow-y: scroll;
+					overflow-x: hidden;
+					-webkit-overflow-scrolling: touch;
+
+					&:not(.dark) {
+						background-color: #fff;
+						color: #111;
+					}
+
+					&.dark {
+						color: #fff;
+					}
+
+					@media (min-width: @screen-large) {
+
+					}
+				}
+
+				> .header {
+					-webkit-order: 1;
+					-webkit-flex: 0 0 4rem;
+				}
+			}
+
+
+
+			@media (max-width: @screen-large) {
+				> .navigation {
+					position: fixed;
+					bottom: 0;
+					width: 100%;
+				}
+
+				> .main > .views {
+					padding-bottom: 65px;
+				}
+			}
+
+			@media (min-width: @screen-large) {
+				-webkit-flex-direction: row;
+				flex-direction: row;
+
+				> .main {
+					-webkit-order: 2;
+					order: 2;
+				}
+
+				> .navigation {
+					-webkit-order: 1;
+					order: 1;
+					-webkit-flex: 0 0 200px;
+					flex: 0 0 200px;
+
+					&.minimized {
+						flex: 0 0 0;
+					}
+				}
+
+			}
+		}
+	}
+

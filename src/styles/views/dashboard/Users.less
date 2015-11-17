@@ -1,0 +1,62 @@
+@import "./users/User.less";
+
+.Dashboard .Users {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+
+	.list {
+	    order: 0;
+	    flex: 0 1 100px;
+	    align-self: auto;
+	}
+
+
+	.chart {
+	    display: none;
+	}
+
+	@media (min-width: @screen-large) {
+
+		.chart {
+			display: block;
+		    order: 1;
+		    flex: 1 1 auto;
+		    align-self: stretch;
+			background-color: #eee;
+			position: relative;
+			min-height: 250px;
+			margin-bottom: 1.5rem;
+
+			.block {
+				background-color: #ccc;
+				position: absolute;
+				box-sizing: border-box;
+
+				&.split {
+					//background-color: red;
+				}
+
+				&.margaret {
+					background-color: pink;
+				}
+
+				&.kevin {
+
+				}
+			}
+
+			.label {
+				position: absolute;
+				bottom: -1.2rem;
+				text-align: center;
+				font-size: .8rem;
+			}
+		}
+		
+	}
+
+}

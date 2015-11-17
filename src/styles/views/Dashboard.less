@@ -1,0 +1,137 @@
+@import 'dashboard/Users.less';
+@import 'dashboard/WeatherCondition.less';	
+
+	@highlight-color: #45C7EC;
+	@text-color-light: #ccc;
+
+
+
+
+
+	.Dashboard {
+
+
+		// We want the dash to be a littler denser
+		// than other views, so were overridding the default styles.
+		.list > * > * {
+			padding-top: .2em;
+			padding-bottom:  .2em;
+
+			&:first-child {
+				-webkit-flex: 1 0 auto;
+				flex: 1 0 auto;
+
+			}
+		}
+
+
+
+
+		
+		.alarm {
+
+			
+			.details {
+				display: table;
+				width: 100%;
+				
+				> * {
+					display: table-cell;
+					box-sizing: border-box;
+					vertical-align: middle;
+				}
+				
+				.time {
+					font-size: 3em;
+				}
+				
+				.status {
+					color: #ccc;
+					text-align: right;
+					font-size: 2em;
+					
+					.isOn {
+						
+						&.true {
+							color: #96CA2D;
+						}
+					}
+
+				}
+				
+			}
+			
+		}
+
+		.weather {
+
+			ol {
+				display: table;
+				width: 100%;
+				margin-top: .8rem;
+				
+				> * {
+					display: table-cell;
+					box-sizing: border-box;
+					vertical-align: middle;
+				}
+			}
+		}
+
+		@media (min-width: @screen-large) {
+
+		    display: flex;
+		    flex-direction: row;
+		    flex-wrap: wrap;
+		    justify-content: flex-start;
+		    align-content: flex-start;
+		    align-items: flex-start;
+
+		    .section {
+		    	margin: 3rem;
+
+		    	.list {
+		    		margin: 0;
+		    	}
+		    }
+
+			.users {
+			    order: 0;
+			    flex: 1 1 auto;
+			    align-self: auto;
+			}
+
+			.alarm {
+			    order: 1;
+			    flex: 0 1 200px;
+			    align-self: auto;
+			}
+
+			.flexboxBreak {
+				order: 2;
+			    flex: 1 1 100%;
+			    align-self: auto;
+			}
+
+			.weather {
+			    order: 3;
+			    flex: 0 1 200px;
+			    align-self: auto;
+			}
+
+			.devices {
+			    order: 4;
+			    flex: 1 1 auto;
+			    align-self: auto;
+			}
+
+			.actions {
+			    display: none;
+			}
+
+
+
+
+		}
+
+	}

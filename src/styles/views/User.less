@@ -1,0 +1,77 @@
+
+
+	.User {
+
+		label {
+			display: block;
+			margin-top: 1em;
+
+			.text {
+				display: block;
+				margin-bottom: .2em;
+			}
+
+			input {
+				width: 100%;
+			}
+		}
+
+		.checkins {
+
+			ol {
+				display: table;
+				width: 100%;
+				
+
+				> * {
+					display: table-row;
+
+					> * {
+						display: table-cell;
+					}
+				}
+			}
+
+			.date {
+				font-size: .9em;
+				color: #aaa;
+				white-space: nowrap;
+			}
+
+			.action {
+				padding-left: .8em;
+				padding-right: .2rem;
+				
+
+				&:before {
+					font-size: .7rem;
+				}
+
+				&.enter:before {
+					color: #96CA2D;
+				}
+
+				&.exit.before {
+					color: #FFC83C;
+				}
+
+
+			}
+
+			.name {
+				width: 100%;
+				
+				padding-top: .2em;
+			}
+
+			li:first-child {
+				.name {
+					padding-top: 0;
+				}
+			}
+
+
+		}
+
+
+	}
