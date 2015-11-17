@@ -86,6 +86,7 @@ define([
 		},
 
 		_onUsersModelChange: function() {
+			console.log('_onUsersModelChange', this.usersModel)
 			this._userPortrait.setModel(this.usersModel.getCurrent());
 		}
 
