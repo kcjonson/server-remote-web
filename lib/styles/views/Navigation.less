@@ -1,9 +1,9 @@
 
 .Navigation {
-	background-color: lighten(@base-color, 10%);
+	background-color: @base-color;
 	color: #fff;
-	padding-bottom: .5rem;
 	position: relative;
+	border-top: 1px solid rgba(0,0,0,.18);
 
 	&.minimized > ol {
 		display: none;
@@ -17,8 +17,8 @@
 			display: table-cell;
 			text-align: center;
 			width: 33.33%;
-			padding: 10px 5px 5px 5px;
-			color: darken(#fff, 30%);
+			padding: 10px 5px 10px 5px;
+			color: @disabled-color-alternate;
 
 			&.admin {
 				display: none;
@@ -49,7 +49,7 @@
 		}
 
 		.selected > .label {
-			color: #fff;
+			color: @highlight-color;
 		}
 
 		:not(.selected) {
@@ -58,12 +58,12 @@
 
 		.label {
 			display: block;
-			font-size: 11px;
+			font-size: 9px;
 
 			&:before {
 				display: block;
-				font-size: 30px;
-				padding-bottom: 5px;
+				font-size: 22px;
+				padding-bottom: 3px;
 
 				@media (min-width: @screen-large) {
 					display: inline-block;

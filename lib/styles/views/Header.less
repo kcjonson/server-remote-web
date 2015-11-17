@@ -2,26 +2,28 @@
 @color-positive: #96CA2D;
 
 .Header {
-	background-color: lighten(@base-color, 10%);
-	box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.2);	
+	background-color: @base-color;
+	border-bottom: 1px solid rgba(0,0,0,.18);
 	display: -webkit-flex;
 	display: flex;
 	-webkit-flex-direction: row;
 	flex-direction: row;
 	-webkit-align-items: center;
 	align-items: center;
-	margin-bottom: -.3rem;
 
 	h1 {
 		-webkit-flex: 1 1 100%;
 		flex: 1 1 100%;
 		font-weight: lighter;
-		font-size: 1.3rem;
+		font-size: 1rem;
 		padding-left: 1em;
+		text-align: center;
+		padding-left: 30px;
+		color: @font-color-alternate;
 	}
 
 	.UserPortrait {
-		flex: 0 0 40px;
+		flex: 0 0 30px;
 		padding-right: 1em;
 	}
 
