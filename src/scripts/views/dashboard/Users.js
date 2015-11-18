@@ -51,9 +51,9 @@ define([
 
 			if (has('screen-large')) {
 				this._getCheckins(userModel);
-			}
-			
+			} 
 		},
+
 
 		_onGetCheckinsError: function(err) {
 			console.error(err);

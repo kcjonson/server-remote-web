@@ -189,34 +189,35 @@ define([
 			//console.log('Update Display', this.devicesModel);
 			if (Data.sources.DEVICES.loaded === true) {
 
+				// Num Lights
 				var numLights = this.devicesModel.where({type: "INDIGO_DIMMER"}).length;
-
 				var numLightsOn = this.devicesModel.filter(function(deviceModel){
 					return deviceModel.get('type') === 'INDIGO_DIMMER'
 					&& deviceModel.get('brightness') > 0;
 				}).length;
-
 				var numOutsideLights = this.devicesModel.filter(function(deviceModel){
 					return deviceModel.get('type') === 'INDIGO_DIMMER' 
 						&& deviceModel.get('name').indexOf('Outside') > -1;
 				}).length;
-
 				var numOutsideLightsOn = this.devicesModel.filter(function(deviceModel){
 					return deviceModel.get('type') === 'INDIGO_DIMMER' 
 						&& deviceModel.get('brightness') > 0 
 						&& deviceModel.get('name').indexOf('Outside') > -1;
 				}).length;
-
 				this._numLightsOnNode.innerHTML = numLightsOn;
 
-				// TODO
-				var numThermostatsOn = 0;
-				
+				// Thermostats
+				var numThermostatsOn = this.devicesModel.filter(function(deviceModel){
+					return deviceModel.get('category') === 'Thermostat'
+					&& deviceModel.get('hvacState') !== 'off';
+				}).length;
+
 				if (numThermostatsOn > 0) {
 					this._thermostatsStatusNode.innerHTML = 'On'
 				} else {
 					this._thermostatsStatusNode.innerHTML = 'Off'
 				}
+
 
 				$(this._devicesSectionNode).removeClass('hidden');
 			}

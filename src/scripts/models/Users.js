@@ -20,15 +20,12 @@ define([
 		model: UserModel,
 
 		getCurrent: function() {
-			console.log('get current')
-
 			var currentUserId = this._currentUserId || Cookie.get('remote.userId');
 			if (currentUserId) {
 				this._currentUserId  = currentUserId;
 				return this.get(currentUserId)
 			} else {
 				this._authenticate(function(response){
-					console.log('foo', response)
 					this._currentUserId= response._id;
 					this.trigger('change');
 				}.bind(this));

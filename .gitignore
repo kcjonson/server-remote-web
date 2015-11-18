@@ -37,7 +37,7 @@ dbs/*
 nodemon.json
 
 
-
+/lib
 
 native/platforms/**/www/
 default.properties

@@ -129,9 +129,8 @@ define([
 					}.bind(this);
 					break;
 				case 'NEST_THERMOSTAT':
-					//console.log('Thermostat', this.model)
-					//var isOn = this.model.get('hvacHeaterIsOn');
-					//$(this._stateNode).toggleClass('on', isOn);
+					var isOn = this.model.get('hvacState') !== 'off';
+					$(this._stateNode).toggleClass('on', isOn);
 					break;
 				case 'INDIGO_SWITCH': 
 					break;
