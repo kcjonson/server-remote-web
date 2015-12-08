@@ -15,6 +15,8 @@ define([
 		initialize: function(params) {
 			this.actionModel = params.actionModel;
 
+			console.log('action model', this.actionModel)
+
 			var templateDom = _.template("<div class='Action'><span class='icon fa'></span><span class='label'></span></div>");
 			this.$el.html(templateDom);
 

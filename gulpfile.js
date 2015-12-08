@@ -22,7 +22,7 @@ gulp.task('copy', function(){
 })
 
 gulp.task('watch', ['default'], function(){
-	gulp.watch('src/scripts/**/*', ['build-js']);
+	gulp.watch('src/scripts/**/*', ['build-scripts']);
 	gulp.watch('src/styles/**/*', ['build-styles']);
 });
 

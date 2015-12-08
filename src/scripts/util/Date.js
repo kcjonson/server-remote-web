@@ -9,30 +9,23 @@ define([], function(){
 
 	return {
 
-		formatRelativeDate: function(relativeDate) {
-
-			var relativeString;
-
-			relativeDate = new Date(relativeDate);
-			var relativeTime = relativeDate.getTime();
-			var nowDate = new Date();
-			var nowTime = nowDate.getTime();
-			var deltaTime = nowTime - relativeTime;
-
-			if (deltaTime > minute) {
-				if (deltaTime > hour) {
-					if (deltaTime > day) {
-						relativeString = Math.round(deltaTime / day) + 'd';
-					} else {
-						relativeString = Math.round(deltaTime / hour) + 'h';
-					}
-				} else {
-					relativeString = Math.round(deltaTime / minute) + 'm';
-				}
-			} else {
-				relativeString = Math.round(deltaTime / second) + 's';
-			}
-			return relativeString;
+		formatRelativeDate: function(time){
+			var d = new Date((time || "").replace(/-/g,"/").replace(/[TZ]/g," "))
+			var diff = Math.abs(((new Date()).getTime() - d.getTime()) / 1000);
+			var day_diff = Math.floor(diff / 86400);
+					
+			if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
+				return;
+					
+			return day_diff == 0 && (
+					diff < 60 && "just now" ||
+					diff < 120 && "1 minute ago" ||
+					diff < 3600 && Math.floor( diff / 60 ) + " minutes ago" ||
+					diff < 7200 && "1 hour ago" ||
+					diff < 86400 && Math.floor( diff / 3600 ) + " hours ago") ||
+				day_diff == 1 && "Yesterday" ||
+				day_diff < 7 && day_diff + " days ago" ||
+				day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago";
 		},
 
 		formatClockTime: function(date) {

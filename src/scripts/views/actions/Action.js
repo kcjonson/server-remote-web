@@ -37,6 +37,7 @@ define([
 		},
 
 		_updateDisplay: function (argument) {
+			console.log('action model', this.model)
 			this._labelNode.innerHTML = this.model.get('name');
 		}
 

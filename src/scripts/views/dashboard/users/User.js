@@ -59,7 +59,7 @@ define([
 				if (mostRecentCheckin) {
 					var isHome = mostRecentCheckin.name === 'Home' && mostRecentCheckin.action === 'ENTER';
 					this.$el.toggleClass('isHome', isHome);
-					this._timestampNode.innerHTML = '(' + DateUtil.formatRelativeDate(mostRecentCheckin.date) + ')';
+					this._timestampNode.innerHTML = DateUtil.formatRelativeDate(mostRecentCheckin.date);
 				}
 			}
 		}

@@ -4,6 +4,122 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+		<script>
+
+
+			(function(){
+
+				// Store refs to built in
+				var _log = console.log;
+				var _warn = console.warn;
+				var _error = console.error;
+				var _debug = console.debug;
+
+				// Intercept and run builtin.
+				console.log = function () {_log.apply(console, arguments); _report('log', arguments);};
+				console.warn = function () {_warn.apply(console, arguments); _report('warn', arguments);};
+				console.error = function () {_error.apply(console, arguments); _report('error', arguments);};
+				console.debug = function () {_debug.apply(console, arguments); _report('debug', arguments);};
+
+				// Intercept real errors
+				window.onerror = function(mess, file, line, column, err) {  
+					_report('exception', err, true);
+					return false;
+				};
+
+				// 
+				function _report(level, args, isError) {
+					var rep = {
+						session: '',
+						level: level,
+						args: isError ? [args.message] : Array.prototype.slice.call(args),
+						stack: parseError(isError ? args : new Error(), !isError),
+						date: new Date(),
+						env:  'BROWSER',
+						
+					} 
+					//document.write("<pre>" + JSON.stringify(rep, null, '\t') + "</pre>")
+
+
+					// SEND TO SERVER
+					if (level === 'exception' || level === 'error') {
+						var request = new XMLHttpRequest();
+						request.open('POST', 'http://1825eglen.com/api/log');
+						request.setRequestHeader('Content-Type', 'application/json');
+						request.send(JSON.stringify(rep));
+					}
+
+
+				}
+
+
+				var CHROME_IE_STACK_REGEXP = /\s+at .*(\S+\:\d+|\(native\))/;
+				var FIREFOX_SAFARI_STACK_REGEXP = /(^|@)\S+\:\d+/;
+
+				function parseError(error, trim) {
+					var stack = [];
+					if (error.stack && error.stack.match(CHROME_IE_STACK_REGEXP)) {
+						stack = parseV8OrIE(error)
+					} else if (error.stack && error.stack.match(FIREFOX_SAFARI_STACK_REGEXP)) {
+						stack = parseFFOrSafari(error)
+					} else {
+						// Unable to parse error.
+					}
+					if (trim === true) {stack.splice(0, 2)}
+					return stack;
+				}
+
+				function parseV8OrIE(error) {
+					return error.stack.split('\n').filter(function (line) {
+						return !!line.match(CHROME_IE_STACK_REGEXP);
+					}, this).map(function (line) {
+						var tokens = line.replace(/^\s+/, '').split(/\s+/).slice(1);
+						var locationParts = extractLocation(tokens.pop());
+						var functionName = tokens.join(' ') || undefined;
+						return {
+							functionName: functionName || 'anonymous',
+							file: locationParts[0],
+							line: locationParts[1],
+							column: locationParts[2]
+						}
+					}, this);
+				}
+				
+				function parseFFOrSafari(error) {
+					return error.stack.split('\n').filter(function (line) {
+						return !!line.match(FIREFOX_SAFARI_STACK_REGEXP);
+					}, this).map(function (line) {
+						var tokens = line.split('@');
+						var locationParts = extractLocation(tokens.pop());
+						var functionName = tokens.shift() || undefined;
+						return {
+							functionName: functionName || 'anonymous',
+							file: locationParts[0],
+							line: locationParts[1],
+							column: locationParts[2]
+						}
+					}, this);
+				}
+
+				function extractLocation(urlLike) {
+					// Fail-fast but return locations like "(native)"
+					if (urlLike.indexOf(':') === -1) {
+						return [urlLike];
+					}
+					var locationParts = urlLike.replace(/[\(\)\s]/g, '').split(':');
+					var lastNumber = locationParts.pop();
+					var possibleNumber = locationParts[locationParts.length - 1];
+					if (!isNaN(parseFloat(possibleNumber)) && isFinite(possibleNumber)) {
+						var lineNumber = locationParts.pop();
+						return [locationParts.join(':'), lineNumber, lastNumber];
+					} else {
+						return [locationParts.join(':'), lastNumber, undefined];
+					}
+				}
+
+			})();
+</script>
+
 		<title>Remote</title>
 
 		<meta name="description" content="Home Remote">
