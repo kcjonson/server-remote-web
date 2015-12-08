@@ -10,7 +10,8 @@ define([], function(){
 	return {
 
 		formatRelativeDate: function(time){
-			var d = new Date((time || "").replace(/-/g,"/").replace(/[TZ]/g," "))
+			//var d = new Date((time || "").replace(/-/g,"/").replace(/[TZ]/g," "))
+			var d = new Date(time);
 			var diff = Math.abs(((new Date()).getTime() - d.getTime()) / 1000);
 			var day_diff = Math.floor(diff / 86400);
 					
